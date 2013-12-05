@@ -1,8 +1,30 @@
 // Main stylesheet for map styling
 
+.map-container {
+  // fix for marker issues
+  label {
+    width: auto;
+    display: inline
+  }
+  img {
+    max-width: none;
+  }
+}
+
 .main-map {
 
   .map-container {
     margin-top: 10px;
+    height: 70%;
+    width: 100%;
+  }
+
+  #map {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    height: 100%;
   }
 }
