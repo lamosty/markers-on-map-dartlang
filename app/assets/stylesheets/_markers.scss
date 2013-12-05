@@ -1,0 +1,231 @@
+
+@mixin styled-select {
+  background-color: $home-select-bg;
+  border: none;
+  @include border-radius(5px);
+  font-family: $font-headings;
+
+  &:focus {
+    border: 1px solid $dark-red;
+    outline: none;
+  }
+}
+
+@mixin default-button {
+  margin-top: 15px;
+  font-size: 18px;
+  width: 180px;
+  height: 40px;
+}
+
+// jQuery UI Sliders styling
+
+.ui-widget-header {
+  border: 1px solid $light-red;
+  background: $light-red;
+}
+
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.ui-widget-header .ui-state-default {
+  border: 1px solid $dark-red;
+  background: $dark-red;
+  height: 22px;
+  width: 22px;
+}
+
+.ui-widget-content {
+  height: 16px;
+  background: $white-red;
+}
+
+.general-select select {
+  @include styled-select;
+  width: 230px;
+  height: 40px;
+  padding-left: 10px;
+  font-size: 20px;
+}
+
+.home-filter {
+  font-family: $font-headings;
+
+  .search {
+    button {
+      @include styled-select;
+      @include default-button;
+    }
+  }
+
+  .price-slider {
+    margin-top: 10px;
+  }
+
+  .slider-text {
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+}
+
+.home-sliders {
+  margin-top: 6px;
+
+  .slider-area {
+    margin-bottom: 15px;
+  }
+
+  .slider-text {
+    @include adjust-font-size-to(16px);
+    color: $white;
+    margin-top: 12px;
+  }
+
+  .slider {
+    margin-top: 15px;
+  }
+}
+
+
+
+  .sorter-select {
+    margin-top: 5px;
+    margin-left: 10px;
+
+    select {
+      @include styled-select;
+      width: 150px;
+      height: 30px;
+      font-size: 16px;
+      padding-left: 8px;
+    }
+  }
+
+ .results {
+   @include floatfix;
+   margin: 0 auto;
+
+
+  .smaller-paddings {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+
+  .result-item {
+    width: 290px;
+    margin-bottom: 12px;
+    text-align: center;
+    display: block;
+
+    &:hover {
+      .text-over {
+        background: rgba($light-red, 0.9);
+
+        span {
+          @include text-shadow(none);
+        }
+      }
+
+      .result-image {
+        @include opacity(0.8);
+      }
+
+    }
+
+    .result-inner {
+      padding: 0;
+      //@include box-shadow(0 2px 2px 0 rgba(0, 0, 0, 0.1));
+
+      max-width: 100%;
+      height: auto;
+    }
+
+    .result-image {
+      max-width: 100%;
+      height: auto;
+      display: block;
+
+    }
+
+    .image {
+      position: relative;
+      width: 100%;
+    }
+
+
+
+    .text-over {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      background: rgba($light-red, 0.3);
+      @include text-shadow(1px 1px 1px #000);
+      margin: 0;
+      padding: 0;
+      padding-top: 4px;
+      font-size: 18px;
+
+      span {
+        color: $white;
+        width: 100%;
+        line-height: 1.3;
+      }
+
+      &.top {
+        top: 0;
+      }
+
+      &.bottom {
+        bottom: 0;
+      }
+
+    }
+  }
+}
+
+.add-new-property {
+  $input-width: 240px;
+  $input-height: 40px;
+  $input-font-size: 18px;
+
+  select {
+   @include styled-select;
+   width: $input-width;
+   height: $input-height;
+   font-size: $input-font-size;
+  }
+
+  input[type="text"], .input {
+    @include styled-select;
+    width: $input-width;
+    height: $input-height;
+    font-size: $input-font-size;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  textarea {
+    @extend .input;
+    height: 130px;
+  }
+
+  input[type="submit"] {
+    @include styled-select;
+    @include default-button;
+  }
+
+  .field_with_errors {
+    .message {
+      color: $dark-red;
+    }
+  }
+}
+
+// Infinite-scroll plugin
+#infscr-loading {
+  position: absolute;
+  bottom: -80px;
+  width: 100%;
+  text-align: center;
+}

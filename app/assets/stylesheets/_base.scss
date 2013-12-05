@@ -1,0 +1,72 @@
+@import "variables";
+@import "compass/typography";
+@import "compass/support";
+
+// vertical rythm
+$base-font-size: 14px;
+$base-line-height: 20px;
+$relative-font-sizing: true;
+
+
+// UI
+$home-select-bg: #e6e6e6;
+
+// // Base colors
+// $dark-red: #FF0055;
+// $light-red: #FDA099;
+// $white: #FFFFFF;
+// $light-blue: #D9F3CB;
+// $light-green: #8AC2B0;*/
+
+// Base colors
+$dark-red: #FF0055;
+$light-red: #FC80A9;
+$white: #FFFFFF;
+$light-blue: #D9F3CB;
+$light-green: #8AC2B0;
+
+$dark-red: #CC0044;
+$light-red: #FF0055;
+$white-red: #FFEBF2;
+
+$font-headings: 'Courgette', cursive;
+$font-text: Arial,Helvetica,Garuda,sans-serif;
+
+
+@function em($px, $context: $base-font-size) {
+  @if $px == 0 { @return 0 }
+  @return ($px / $context) * 1em;
+}
+
+@mixin image-text-replacement {
+  display: block;
+  border: 0;
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+}
+
+@mixin floatfix {
+  &:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+  }
+}
+
+@mixin text-stroke {
+  -webkit-text-stroke: .5px;
+}
+
+// Links in pinker.sk site
+@mixin pink-link {
+  @include unstyled-link;
+  @include link-colors($light-red, $dark-red);
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
