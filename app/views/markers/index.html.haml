@@ -1,2 +1,9 @@
 .main-map.map-container
   #map
+
+- content_for :scripts do
+  = javascript_include_tag "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"
+  %script(src="/dart/web/packages/browser/dart.js")
+  %script(type="application/dart" src="/dart/web/mapengine.dart")
+  = javascript_include_tag "markers"
+
