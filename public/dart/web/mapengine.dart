@@ -2,27 +2,45 @@ import 'dart:html';
 import 'dart:js';
 
 void main() {
-  var object = new JsObject(context['Object']);
-  object['greeting'] = 'Hello';
-  object['greet'] = (name) {
-    return "${object['greeting']} $name";
-  };
+  var jQuery = context['\$'];
+  var googleMaps = context['google']['maps'];
 
-  var jsMap = new JsObject.jsify([1, 2, 3]);
-
-  var result = test(jsMap);
-
-  context.callMethod('alert', [result]);
+  var mapOptions = new JsObject.jsify({
+      'map': {
+        'address':"POURRIERES, FRANCE",
+        'options':{
+          'zoom':10,
+          'mapTypeId': googleMaps['MapTypeId']['ROADMAP'],
+          'mapTypeControl': true
+        }
+      }
+    });
+  /*jQuery.apply(['#map']).callMethod('gmap3', [mapOptions]);*/
+  var j = new J('#map');
+  j.gmap3(mapOptions);
 }
 
-dynamic test(f) {
-  var result = 0;
+void j(q) {
+  var jQuery = context['\$'];
 
-  for (var i = 0; i < f.length; i++) {
-    result += f[i];
+  var gmap3 = (options) {
+    jQuery.apply([q]).callMethod('gmap3', [options]);
+  };
+}
+
+class J {
+  String selector;
+
+  J(this.selector) {
+
   }
 
-  return result;
+  void gmap3(options) {
+    var jQuery = context['\$'];
+    jQuery.apply([selector]).callMethod('gmap3', [options]);
+
+  }
 }
+
 
 
