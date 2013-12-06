@@ -3,8 +3,6 @@ library gmap;
 import 'dart:js';
 import 'package:mapengine/js_helper.dart';
 
-part 'src/marker.dart';
-
 class GMap {
   // Properties
   final String elementId;
@@ -69,8 +67,10 @@ class GMap {
     js.gmap3('autofit');
   }
   
-  void addMarkersToMap(List<Marker> markers) {
-    
+  void addMarkersToMap(List<Map> markers) {
+    var params = {
+      
+    };
   }
   
   
