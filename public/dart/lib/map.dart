@@ -35,14 +35,42 @@ class Map {
     });
   }
   
-  void drawMap() {
-    jQuery.apply([elementId]).callMethod(gmap3, [this._jsifyMapOptions()]);
+  JsObject _jsify(params) {
+    return new JsObject.jsify(params);
   }
   
-  void autofitMap() {
-    var applied = jQuery.apply([elementId]);
+  void _callGmapWithParams(dynamic params) {
+    jQuery.apply([elementId]).callMethod(gmap3, [params]);
+  }
+  
+  void _clearMarkersFromMap([callback]) {
+    var params = this._jsify({
+      'clear': {
+        'name': "marker",
+        'callback': new JsFunction.withThis((jsThis, event) {
+          if (callback != null) {
+            callback();
+          }
+        })
+      }
+    });
     
-    applied.callMethod(gmap3, ['autofit']);
+    this._callGmapWithParams(params);
+  }
+  
+  void drawMap() {
+    // Initialize the map and draw it.
+    
+    this._callGmapWithParams(this._jsifyMapOptions());
+    
+    this._clearMarkersFromMap(() {
+      print('hello');
+    });
+  }
+ 
+  
+  void autofitMap() {
+    this._callGmapWithParams('autofit');
   }
   
 }
