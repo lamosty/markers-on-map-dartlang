@@ -3,17 +3,18 @@ library js_helper;
 import 'dart:js';
 
 class JsHelper {
+  // Properties
+  String elementId;
   
   // JS contexts
   final jQuery = context['jQuery'];
   final gmaps = context['google']['maps'];
   
-  String elementId;
   
   // Public methods
   
   JsHelper(
-    this.elementId
+    [this.elementId]
   );
   
   void gmap3(dynamic params) {

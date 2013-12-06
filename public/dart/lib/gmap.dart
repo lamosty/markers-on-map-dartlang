@@ -1,15 +1,20 @@
-library map;
+library gmap;
 
 import 'dart:js';
 import 'package:mapengine/js_helper.dart';
 
+part 'src/marker.dart';
+
 class GMap {
+  // Properties
   final String elementId;
-  JsHelper js;
   var mapOptions;
   
   // JS contexts
   final gmaps = context['google']['maps']; 
+  
+  // Helpers
+  JsHelper js;
   
   GMap(this.elementId) {
     mapOptions = {
@@ -18,8 +23,8 @@ class GMap {
       'zoom': 15
     };
     
+    // Initialize JsHelper with #map element id
     js = new JsHelper(elementId);
-    
     
   }
 
@@ -63,5 +68,10 @@ class GMap {
   void autofit() {
     js.gmap3('autofit');
   }
+  
+  void addMarkersToMap(List<Marker> markers) {
+    
+  }
+  
   
 }
