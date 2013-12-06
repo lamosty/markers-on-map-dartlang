@@ -1,9 +1,9 @@
 import 'dart:html';
 import 'dart:js';
-import 'package:mapengine/map.dart' as GMap;
+import 'package:mapengine/gmap.dart';
 
 void main() {  
-  var map = new GMap.Map('#map');
+  var map = new GMap('#map');
   map.drawMap(); 
   
 }
