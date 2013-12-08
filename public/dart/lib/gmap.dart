@@ -1,29 +1,26 @@
 library gmap;
 
 import 'dart:js';
+import 'dart:async';
 import 'package:mapengine/js_helper.dart';
 
 class GMap {
   // Properties
   final String elementId;
   var mapOptions;
-  
-  // JS contexts
-  final gmaps = context['google']['maps']; 
-  
+
   // Helpers
   JsHelper js;
-  
+
   GMap(this.elementId) {
-    mapOptions = {
-      'center': [48.161154, 17.137031],
-      'mapTypeId': gmaps['MapTypeId']['ROADMAP'],
-      'zoom': 15
-    };
-    
     // Initialize JsHelper with #map element id
     js = new JsHelper(elementId);
     
+    mapOptions = {
+      'center': [48.161154, 17.137031],
+      'mapTypeId': js.gmaps['MapTypeId']['ROADMAP'],
+      'zoom': 15
+    };
   }
 
   void setMapOptions({
@@ -31,7 +28,7 @@ class GMap {
   }) {
     mapOptions['center'] = center;
   }
-  
+
   Map getMapParams() {
     return {
       'map': {
@@ -39,7 +36,7 @@ class GMap {
       }
     };
   }
-  
+
 
   void _clearMarkersFromMap([callback]) {
     var params = {
@@ -52,26 +49,78 @@ class GMap {
         })
       }
     };
-    
+
     js.gmap3(params);
   }
-  
+
   void drawMap() {
     // Initialize the map and draw it.
     js.gmap3(getMapParams());
-    
+
   }
- 
-  
+
+
   void autofit() {
     js.gmap3('autofit');
   }
-  
+
   void addMarkersToMap(List<Map> markers) {
     var params = {
-      
+      'marker': {
+        'values': markers
+      }
     };
+
+    js.gmap3(params);
+  }
+
+  void reloadMapWithNewMarkers({
+    List<Map> markers,
+    bool autofit: false,
+    Map events
+  }) {
+    this._clearMarkersFromMap(() {
+      // Let's have a little delay in case map hasn't cleared yet.
+      return new Future.delayed(new Duration(milliseconds: 1), () {
+        var params = {
+          'marker': {
+            'values': markers,
+            'events': events
+          }
+        };
+        
+        // Run params on the map.
+        js.gmap3(params);
+        
+        // After markers have been added to the map, autofit it if necessary.
+        new Future.delayed(new Duration(milliseconds: 1), () {
+          if (autofit) {
+            this.autofit();
+          }
+        });
+ 
+      });
+      
+    });
   }
   
-  
+  void triggerResize() {
+    var map = js.gmap3('get');
+    var center = map.callMethod('getCenter', []);
+    js.gmaps['event'].callMethod('trigger', [map, 'resize']);
+    map.callMethod('setCenter', [center]);
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
