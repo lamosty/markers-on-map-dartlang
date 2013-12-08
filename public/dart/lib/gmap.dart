@@ -2,6 +2,7 @@ library gmap;
 
 import 'dart:js';
 import 'dart:async';
+import 'dart:html';
 import 'package:mapengine/js_helper.dart';
 
 class GMap {
@@ -76,7 +77,7 @@ class GMap {
 
   void reloadMapWithNewMarkers({
     List<Map> markers,
-    bool autofit: false,
+    bool autofit: true,
     Map events
   }) {
     this._clearMarkersFromMap(() {
@@ -109,6 +110,19 @@ class GMap {
     var center = map.callMethod('getCenter', []);
     js.gmaps['event'].callMethod('trigger', [map, 'resize']);
     map.callMethod('setCenter', [center]);
+  }
+  
+  JsFunction getDefaultMousedownEvent() {
+    return js.func((jsThis, marker, event, context) {
+      var markerPosition = marker.callMethod('getPosition', []);
+        
+        DivElement markerPositionDiv = new DivElement()
+          ..text = 'Clicked marker position is: $markerPosition';
+        
+        querySelector('.map-container')
+          ..append(markerPositionDiv);
+            
+      });
   }
 }
 
