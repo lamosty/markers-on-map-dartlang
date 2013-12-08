@@ -13,9 +13,8 @@
 
 .main-map {
 
-  .map-container {
-    margin-top: 10px;
-    height: 70%;
+  &.map-container {
+    height: 80%;
     width: 100%;
   }
 
