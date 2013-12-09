@@ -5,6 +5,5 @@
   = javascript_include_tag "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"
   = javascript_include_tag "markers"
   %script(type="application/dart" src="/dart/web/mapengine.dart")
-  %script(src="/dart/web/packages/browser/dart.js")
-  %script(src="/dart/web/packages/browser/interop.js")
+  = javascript_include_tag "dart_helpers"
 
