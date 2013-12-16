@@ -16,7 +16,7 @@ class GMap {
   GMap(this.elementId) {
     // Initialize JsHelper with #map element id
     js = new JsHelper(elementId);
-    
+
     mapOptions = {
       'center': [48.161154, 17.137031],
       'mapTypeId': js.gmaps['MapTypeId']['ROADMAP'],
@@ -89,39 +89,39 @@ class GMap {
             'events': events
           }
         };
-        
+
         // Run params on the map.
         js.gmap3(params);
-        
+
         // After markers have been added to the map, autofit it if necessary.
         new Future.delayed(new Duration(milliseconds: 1), () {
           if (autofit) {
             this.autofit();
           }
         });
- 
+
       });
-      
+
     });
   }
-  
+
   void triggerResize() {
     var map = js.gmap3('get');
     var center = map.callMethod('getCenter', []);
     js.gmaps['event'].callMethod('trigger', [map, 'resize']);
     map.callMethod('setCenter', [center]);
   }
-  
+
   JsFunction getDefaultMousedownEvent() {
     return js.func((jsThis, marker, event, context) {
       var markerPosition = marker.callMethod('getPosition', []);
-        
+
         DivElement markerPositionDiv = new DivElement()
           ..text = 'Clicked marker position is: $markerPosition';
-        
+
         querySelector('.map-container')
           ..append(markerPositionDiv);
-            
+
       });
   }
 }

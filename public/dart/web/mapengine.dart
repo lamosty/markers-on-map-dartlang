@@ -12,9 +12,14 @@ void main() {
   
   // Add some testing marker to the map.
   map.addMarkersToMap([{'latLng': [48.161154, 17.137031]}]);
+    
   
-  // After some time, add some more markers with a mousedown event.
-  new Future.delayed(new Duration(milliseconds: 2000), () {
+}
+
+// Testing functions
+void addDelayedMarkers(int timeInMs, GMap map) {
+  //  After some time, add some more markers with a mousedown event.
+  new Future.delayed(new Duration(milliseconds: timeInMs), () {
     map.reloadMapWithNewMarkers(
         markers: [
                   {'latLng': [47, 16]},
@@ -26,7 +31,6 @@ void main() {
         events: {'mousedown': map.getDefaultMousedownEvent()}
     );
   });
-  
 }
 
 
