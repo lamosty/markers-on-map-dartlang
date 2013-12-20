@@ -7,6 +7,14 @@
 	},
 	"buffers":
 	[
+		{
+			"file": "/home/lamosty/dev/realestateproject/app/assets/javascripts/map.js.coffee",
+			"settings":
+			{
+				"buffer_size": 8871,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"command_palette":
@@ -57,6 +65,7 @@
 	},
 	"file_history":
 	[
+		"/media/Work/dev/MapEngine/projekt.sublime-project",
 		"/media/Work/dev/static-webs/chris/rozpocty-stavieb/projekt.sublime-project",
 		"/home/lamosty/Downloads/templates/rttheme17/about-us.html",
 		"/media/Work/dev/static-webs/chris/rozpocty-stavieb/css/flexslider.css",
@@ -102,8 +111,38 @@
 	"groups":
 	[
 		{
+			"selected": 0,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "/home/lamosty/dev/realestateproject/app/assets/javascripts/map.js.coffee",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8871,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3029,
+								3029
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2268.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -149,6 +188,10 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"map",
+				"realestateproject/app/assets/javascripts/map.js.coffee"
+			],
 			[
 				"in",
 				"index.html"
@@ -206,7 +249,7 @@
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": true,
+	"side_bar_visible": false,
 	"side_bar_width": 220.0,
 	"status_bar_visible": true,
 	"template_settings":
