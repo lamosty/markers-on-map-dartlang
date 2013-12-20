@@ -10,6 +10,9 @@ class GMap {
   final String elementId;
   Map mapOptions;
   Map mapEvents = {};
+  // used to identify markers, should increment if new marker is added
+  int _lastMarkerId = 0;
+  Map<int, Map> _markers = {}; // map of markers, key is marker's ID
 
   // Helpers
   JsHelper js;
@@ -74,10 +77,11 @@ class GMap {
     js.gmap3('autofit');
   }
 
-  void addMarkersToMap(List<Map> markers) {
+  void addMarkersToMap(List<Map> markers, Map events) {
     var params = {
         'marker': {
-            'values': markers
+            'values': markers,
+            'events': events
         }
     };
 
@@ -137,8 +141,51 @@ class GMap {
   // Part of WEGA project
   JsFunction mapMouseDown() {
     return js.func((jsThis, _, event, something) {
+      var jsLatLng = event['latLng'];
 
-      createSimpleOverlay(event['latLng'], {'heading': 'My Super Marker', 'body': 'My super body'});
+      var newMarker = {
+        'latLng' : [jsLatLng['nb'], jsLatLng['ob']],
+        'data' : {
+          'heading' : '',
+          'body' : ''
+        },
+        'id' : _lastMarkerId
+      };
+
+      _markers[newMarker['id']] = newMarker;
+      _lastMarkerId++;
+
+      addMarkersToMap([newMarker], {
+        'mouseover': js.func((jsThis, marker, event, context) {
+          createSimpleOverlay(_markers[context['id']]);
+        }),
+        'mouseout' : js.func((jsThis, marker, event, context) {
+          clearAllOverlays();
+        }),
+        'click' : js.func((jsThis, marker, event, context) {
+          clearAllOverlays();
+
+          var params = {
+            'get' : {
+              'id' : newMarker['id']
+            }
+          };
+
+//          var marker = js.gmap3(params);
+//          print(params);
+
+          var func = js.func((jsThis, sd) {
+            clearAllOverlays();
+          });
+
+          js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseout']);
+          createSimpleOverlay(newMarker, editable: true, callback: () {
+            js.gmaps['event']['addListener'].apply([marker, 'mouseout', func]);
+          });
+        })
+      });
+      createSimpleOverlay(newMarker, editable: true);
+
     });
   }
 
@@ -185,12 +232,17 @@ class GMap {
     return overlayContainer.outerHtml;
   }
 
-  void createSimpleOverlay(position, data) {
+/**
+  * This method creates simple overlay over the map for specified marker
+  * at the specified position with specified data for specified marker.
+  * The marker will hold the data (heading and body text).
+*/
+  void createSimpleOverlay(Map marker, {editable: false, callback}) {
     var params = {
       'overlay' : {
-        'latLng' : position,
+        'latLng' : marker['latLng'],
         'options' : {
-          'content' : createSimpleOverlayTemplate(data, editable: true)
+          'content' : createSimpleOverlayTemplate(marker['data'], editable: editable)
         },
         'events' : {
           'click' : js.func((jsThis, sender, event, context) {
@@ -199,7 +251,15 @@ class GMap {
             if (event[0].target.id == 'save-marker') {
               String headingText = querySelector('#heading-input').value;
               String bodyText = querySelector('#body-input').value;
-              print(sender['latLng']);
+
+              marker['data']['heading'] = headingText;
+              marker['data']['body'] = bodyText;
+
+              clearAllOverlays();
+
+              if (callback != null) {
+                callback();
+              }
 
             }
           })
@@ -208,7 +268,13 @@ class GMap {
     };
 
     js.gmap3(params);
+  }
 
+  void clearAllOverlays() {
+    var params = {
+      'clear' : 'overlay'
+    };
+    js.gmap3(params);
   }
 
 }
