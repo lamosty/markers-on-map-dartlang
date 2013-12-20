@@ -1,14 +1,15 @@
 library gmap;
 
-import 'dart:js';
 import 'dart:async';
 import 'dart:html';
+export 'dart:html';
 import 'package:mapengine/js_helper.dart';
 
 class GMap {
   // Properties
   final String elementId;
-  var mapOptions;
+  Map mapOptions;
+  Map mapEvents = {};
 
   // Helpers
   JsHelper js;
@@ -30,25 +31,30 @@ class GMap {
     mapOptions['center'] = center;
   }
 
+  void addMapEvent(String eventName, Object eventFunction) {
+    mapEvents[eventName] = eventFunction();
+    print(mapEvents);
+  }
+
   Map getMapParams() {
     return {
-      'map': {
-        'options': mapOptions
-      }
+        'map': {
+            'options': mapOptions,
+            'events':  mapEvents
+        }
     };
   }
 
-
   void _clearMarkersFromMap([callback]) {
     var params = {
-      'clear': {
-        'name': "marker",
-        'callback': js.func((jsThis, event) {
-          if (callback != null) {
-            callback();
-          }
-        })
-      }
+        'clear': {
+            'name': "marker",
+            'callback': js.func((jsThis, event) {
+              if (callback != null) {
+                callback();
+              }
+            })
+        }
     };
 
     js.gmap3(params);
@@ -67,27 +73,27 @@ class GMap {
 
   void addMarkersToMap(List<Map> markers) {
     var params = {
-      'marker': {
-        'values': markers
-      }
+        'marker': {
+            'values': markers
+        }
     };
 
     js.gmap3(params);
   }
 
   void reloadMapWithNewMarkers({
-    List<Map> markers,
-    bool autofit: true,
-    Map events
-  }) {
+                               List<Map> markers,
+                               bool autofit: true,
+                               Map events
+                               }) {
     this._clearMarkersFromMap(() {
-      // Let's have a little delay in case map hasn't cleared yet.
+    // Let's have a little delay in case map hasn't cleared yet.
       return new Future.delayed(new Duration(milliseconds: 1), () {
         var params = {
-          'marker': {
-            'values': markers,
-            'events': events
-          }
+            'marker': {
+                'values': markers,
+                'events': events
+            }
         };
 
         // Run params on the map.
@@ -112,9 +118,9 @@ class GMap {
     map.callMethod('setCenter', [center]);
   }
 
-  JsFunction getDefaultMousedownEvent() {
-    return js.func((jsThis, marker, event, context) {
-      var markerPosition = marker.callMethod('getPosition', []);
+    JsFunction getDefaultMousedownEvent() {
+      return js.func((jsThis, marker, event, context) {
+        var markerPosition = marker.callMethod('getPosition', []);
 
         DivElement markerPositionDiv = new DivElement()
           ..text = 'Clicked marker position is: $markerPosition';
@@ -123,6 +129,15 @@ class GMap {
           ..append(markerPositionDiv);
 
       });
+    }
+
+  // Part of WEGA project
+  JsFunction mapMouseDown() {
+    return js.func((jsThis, _, event, something) {
+        print('hello');
+        window.console.log(jsThis);
+        print(event['latLng']);
+    });
   }
 }
 

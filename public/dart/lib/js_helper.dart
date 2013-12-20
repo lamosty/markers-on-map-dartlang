@@ -1,6 +1,7 @@
 library js_helper;
 
 import 'dart:js';
+export 'dart:js';
 
 class JsHelper {
   // Properties

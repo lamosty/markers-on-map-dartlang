@@ -1,17 +1,16 @@
-import 'dart:html';
-import 'dart:js';
 import 'dart:async';
 import 'package:mapengine/gmap.dart';
 
 void main() {
   // Prepare a new map object with default map options.
   var map = new GMap('#map');
+  map.addMapEvent('mousedown', map.mapMouseDown);
   
   // Draw map with specified options.
   map.drawMap();
   
   // Add some testing marker to the map.
-  map.addMarkersToMap([{'latLng': [48.161154, 17.137031]}]);
+//  map.addMarkersToMap([{'latLng': [48.161154, 17.137031]}]);
     
   
 }
