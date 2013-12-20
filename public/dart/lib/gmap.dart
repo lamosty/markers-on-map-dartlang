@@ -137,25 +137,72 @@ class GMap {
   // Part of WEGA project
   JsFunction mapMouseDown() {
     return js.func((jsThis, _, event, something) {
-      createSimpleOverlay(event['latLng'], {'val': 'nehhe'});
+
+      createSimpleOverlay(event['latLng'], {'heading': 'My Super Marker', 'body': 'My super body'});
     });
   }
 
-  String createSimpleOverlayTemplate(Map data) {
-    return """
-      <div class='map-item'>
-        $data['val']
-      </div>
+/**
+  * Creates overlay (basically something that floats above the Google Map)
+  * with specified data (heading and body texts). If editable flag is on,
+  * overlay creates itself with input boxes where the data can be changed.
+*/
+  String createSimpleOverlayTemplate(Map data, {editable: false}) {
+    DivElement overlayContainer = new DivElement()..classes.add('map-item');
+    DivElement headingContainer = new DivElement()..classes.add('heading');
+    DivElement bodyContainer = new DivElement()..classes.add('body');
 
-    """;
+    overlayContainer.children.add(headingContainer);
+    overlayContainer.children.add(bodyContainer);
+
+    Node heading;
+    Node body;
+
+    if (editable) {
+      heading = new InputElement(type: 'text')
+        ..setAttribute('value', data['heading'])
+        ..id = 'heading-input';
+
+      body = new TextAreaElement()
+        ..text = data['body']
+        ..id = 'body-input';
+
+      ButtonElement confirmButton = new ButtonElement()
+        ..text = 'Save Marker'
+        ..id = 'save-marker';
+      overlayContainer.children.add(confirmButton);
+
+    } else {
+      heading = new Text(data['heading']);
+
+      body = new ParagraphElement()
+        ..text = data['body'];
+    }
+
+    headingContainer.children.add(heading);
+    bodyContainer.children.add(body);
+
+    return overlayContainer.outerHtml;
   }
 
   void createSimpleOverlay(position, data) {
     var params = {
       'overlay' : {
-        'latLng': position,
-        'options': {
-          'content': createSimpleOverlayTemplate(data)
+        'latLng' : position,
+        'options' : {
+          'content' : createSimpleOverlayTemplate(data, editable: true)
+        },
+        'events' : {
+          'click' : js.func((jsThis, sender, event, context) {
+            // event[0] is a mouse click event that was triggered by
+            // clicking on the button
+            if (event[0].target.id == 'save-marker') {
+              String headingText = querySelector('#heading-input').value;
+              String bodyText = querySelector('#body-input').value;
+              print(sender['latLng']);
+
+            }
+          })
         }
       }
     };
