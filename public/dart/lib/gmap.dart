@@ -33,7 +33,6 @@ class GMap {
 
   void addMapEvent(String eventName, Object eventFunction) {
     mapEvents[eventName] = eventFunction();
-    print(mapEvents);
   }
 
   Map getMapParams() {
@@ -67,6 +66,10 @@ class GMap {
   }
 
 
+  /**
+    * This method zooms and centers the map in such a way that all the objects
+    * are visible on the map (markers, overlays, etc).
+  */
   void autofit() {
     js.gmap3('autofit');
   }
@@ -82,10 +85,10 @@ class GMap {
   }
 
   void reloadMapWithNewMarkers({
-                               List<Map> markers,
-                               bool autofit: true,
-                               Map events
-                               }) {
+    List<Map> markers,
+    bool autofit: true,
+    Map events
+  }) {
     this._clearMarkersFromMap(() {
     // Let's have a little delay in case map hasn't cleared yet.
       return new Future.delayed(new Duration(milliseconds: 1), () {
@@ -118,27 +121,49 @@ class GMap {
     map.callMethod('setCenter', [center]);
   }
 
-    JsFunction getDefaultMousedownEvent() {
-      return js.func((jsThis, marker, event, context) {
-        var markerPosition = marker.callMethod('getPosition', []);
+  JsFunction getDefaultMousedownEvent() {
+    return js.func((jsThis, marker, event, context) {
+      var markerPosition = marker.callMethod('getPosition', []);
 
-        DivElement markerPositionDiv = new DivElement()
-          ..text = 'Clicked marker position is: $markerPosition';
+      DivElement markerPositionDiv = new DivElement()
+        ..text = 'Clicked marker position is: $markerPosition';
 
-        querySelector('.map-container')
-          ..append(markerPositionDiv);
+      querySelector('.map-container')
+        ..append(markerPositionDiv);
 
-      });
-    }
+    });
+  }
 
   // Part of WEGA project
   JsFunction mapMouseDown() {
     return js.func((jsThis, _, event, something) {
-        print('hello');
-        window.console.log(jsThis);
-        print(event['latLng']);
+      createSimpleOverlay(event['latLng'], {'val': 'nehhe'});
     });
   }
+
+  String createSimpleOverlayTemplate(Map data) {
+    return """
+      <div class='map-item'>
+        $data['val']
+      </div>
+
+    """;
+  }
+
+  void createSimpleOverlay(position, data) {
+    var params = {
+      'overlay' : {
+        'latLng': position,
+        'options': {
+          'content': createSimpleOverlayTemplate(data)
+        }
+      }
+    };
+
+    js.gmap3(params);
+
+  }
+
 }
 
 

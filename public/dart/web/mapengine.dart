@@ -4,14 +4,15 @@ import 'package:mapengine/gmap.dart';
 void main() {
   // Prepare a new map object with default map options.
   var map = new GMap('#map');
-  map.addMapEvent('mousedown', map.mapMouseDown);
+  map.addMapEvent('click', map.mapMouseDown);
   
   // Draw map with specified options.
   map.drawMap();
   
   // Add some testing marker to the map.
 //  map.addMarkersToMap([{'latLng': [48.161154, 17.137031]}]);
-    
+
+
   
 }
 
@@ -27,7 +28,7 @@ void addDelayedMarkers(int timeInMs, GMap map) {
                   {'latLng': [44, 13]},
                   {'latLng': [43, 12]}
                  ], 
-        events: {'mousedown': map.getDefaultMousedownEvent()}
+        events: {'click': map.getDefaultMousedownEvent()}
     );
   });
 }
