@@ -1,5 +1,27 @@
-.main-map.map-container
-  #map
+.demo-page
+  .main-map.map-container
+    #map
+
+  .map-controls
+    .json.row
+      %h3 Export and Import
+      .export-container
+        %button#prepare-json-export.btn.btn-primary.btn-lg.btn-block(type="button") Prepare JSON export
+      %hr
+      %h4 Import markers from JSON
+      .input-group
+        %input#json-input.form-control(type="text" placeholder="paste json here")
+        %span.input-group-btn
+          %button#import-markers.btn.btn-default(type="button") Import
+    %hr
+    .remove-markers.row
+      %button#remove-all-markers.btn.btn-primary.btn-lg.btn-block(type="button") Remove All Markers
+    %hr
+    .row
+      %button#import-example-markers.btn.btn-success.btn-lg.btn-block(type="button") Import Example Markers
+
+
+
 
 - content_for :scripts do
   = javascript_include_tag "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"

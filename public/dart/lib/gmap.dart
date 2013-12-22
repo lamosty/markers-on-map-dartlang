@@ -78,7 +78,7 @@ class GMap {
     js.gmap3('autofit');
   }
 
-  void addMarkersToMap(List<Map> markers, Map events) {
+  void addMarkersToMap(List<Map> markers, Map events, {bool autofit: false}) {
     var params = {
         'marker': {
             'values': markers,
@@ -87,6 +87,10 @@ class GMap {
     };
 
     js.gmap3(params);
+
+    if (autofit) {
+      this.autofit();
+    }
   }
 
   void reloadMapWithNewMarkers({
@@ -142,6 +146,10 @@ class GMap {
   // Part of WEGA project
   JsFunction mapMouseDown() {
     return js.func((jsThis, _, event, something) {
+
+      // Clear overlays that might be opened.
+      clearAllOverlays();
+
       var jsLatLng = event['latLng'];
 
       var newMarker = {
@@ -150,7 +158,7 @@ class GMap {
           'heading' : '',
           'body' : ''
         },
-        'id' : _lastMarkerId++
+        'id' : ++_lastMarkerId
       };
 
       _markers[newMarker['id']] = newMarker;
@@ -317,48 +325,39 @@ class GMap {
     _markers.remove(markerId);
   }
 
-  void loadMarkersFromJson() {
-    var newMarkers = [{
-      'latLng' : [47, 18],
-      'data' : {
-          'heading' : 'prvy',
-          'body' : 'telo'
-      }
-    }, {
-        'latLng' : [46, 18],
-        'data' : {
-            'heading' : 'druhy',
-            'body' : 'telo'
-        }
-    }, {
-        'latLng' : [45, 18],
-        'data' : {
-            'heading' : 'treti',
-            'body' : 'telo'
-        }
-    }, {
-        'latLng' : [44, 18],
-        'data' : {
-            'heading' : 'stvrty',
-            'body' : 'telo'
-        }
-    }];
 
-    var jsonMarkers = JSON.encode(newMarkers);
-    newMarkers = JSON.decode(jsonMarkers);
+  String exportMarkersAsJSON() {
+    List<Map> markersToExport = new List();
 
+    for (Map marker in _markers.values) {
+      markersToExport.add(marker);
+    }
 
-//    window.open("data:text/html", 'test', "_blank");
+    return JSON.encode(markersToExport);
+  }
+
+  void importMarkersFromJSON(String markersInJSON) {
+    var newMarkers = JSON.decode(markersInJSON);
 
     for (Map marker in newMarkers) {
-      marker['id'] = _lastMarkerId++;
+      marker['id'] = ++_lastMarkerId;
       _markers[marker['id']] = marker;
     }
 
-    addMarkersToMap(newMarkers, _generateNewMarkerEvents());
+    addMarkersToMap(newMarkers, _generateNewMarkerEvents(), autofit: true);
 
+  }
 
+  void removeAllMarkersFromMap() {
+    var params = {
+      'clear' : {
+        'name' : "marker"
+      }
+    };
 
+    js.gmap3(params);
+
+    _markers = {};
   }
 
 }
