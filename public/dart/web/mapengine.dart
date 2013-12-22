@@ -9,6 +9,8 @@ void main() {
   // Draw map with specified options.
   map.drawMap();
 
+  map.loadMarkersFromJson();
+
 
   // Add some testing marker to the map.
 //  map.addMarkersToMap([{'latLng': [48.161154, 17.137031]}]);

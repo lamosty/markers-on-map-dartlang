@@ -125,3 +125,88 @@ h1, h2, h3, h4, h5 {
 // Map stylesheets
 @import "map";
 
+// WEGA
+.map-item {
+  width: 180px;
+
+  .common-heading {
+    font-family: $font-headings;
+    font-size: 20px;
+    color: $beige;
+    padding-left: 10px;
+  }
+
+  .common-body {
+    font-family: $font-text;
+    font-size: 15px;
+    color: $brown-unit-intro;
+    padding-left: 8px;
+  }
+
+  .heading {
+    height: 35px;
+    background-color: $brown-unit-intro;
+
+    .text {
+      @extend .common-heading;
+      padding-top: 5px;
+    }
+
+    input[type="text"] {
+      @extend .common-heading;
+      height: 35px;
+      width: 180px;
+      margin: 0;
+      border: 0;
+      background-color: transparent;
+
+      outline: none;
+
+      &:focus {
+        box-shadow: 0 0 5px $white-menu;
+      }
+    }
+  }
+
+  .body {
+    height: 65px;
+    background-color: $light-brown-article;
+
+    .text {
+      @extend .common-body;
+      padding-top: 3px;
+    }
+
+    textarea {
+      @extend .common-body;
+      width: 180px;
+      height: 65px;
+      border: 0;
+      background-color: transparent;
+
+      outline: none;
+      resize: none;
+
+      &:focus {
+        box-shadow: 0 0 5px $white-menu;
+      }
+    }
+  }
+
+  button {
+    width: 90px;
+    border: 0;
+    height: 35px;
+    font-size: 16px;
+    font-family: $font-headings;
+    background-color: $beige;
+    color: $brown-unit-intro;
+
+    &:hover {
+      background-color: $brown-unit-intro;
+      color: $white-footer-border;
+    }
+  }
+
+}
+

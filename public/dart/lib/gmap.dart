@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:html';
 export 'dart:html';
 import 'package:mapengine/js_helper.dart';
+import 'dart:convert';
 
 class GMap {
   // Properties
@@ -11,7 +12,7 @@ class GMap {
   Map mapOptions;
   Map mapEvents = {};
   // used to identify markers, should increment if new marker is added
-  int _lastMarkerId = 0;
+  int _lastMarkerId = -1;
   Map<int, Map> _markers = {}; // map of markers, key is marker's ID
 
   // Helpers
@@ -149,14 +150,13 @@ class GMap {
           'heading' : '',
           'body' : ''
         },
-        'id' : _lastMarkerId
+        'id' : _lastMarkerId++
       };
 
       _markers[newMarker['id']] = newMarker;
-      _lastMarkerId++;
 
-      addMarkersToMap([newMarker], _newMarkerEvents(newMarker));
-      createSimpleOverlay(newMarker, editable: true);
+      addMarkersToMap([newMarker], _generateNewMarkerEvents());
+      createSimpleOverlay(newMarker['id'], editable: true);
 
     });
   }
@@ -165,12 +165,12 @@ class GMap {
   * Returns events for new marker that has been added to the map
   * by clicking on it.
 */
-  Map _newMarkerEvents(Map newMarker) {
+  Map _generateNewMarkerEvents() {
     return {
 
       'mouseover': js.func((jsThis, marker, event, context) {
 
-        createSimpleOverlay(_markers[context['id']]);
+        createSimpleOverlay(context['id']);
 
       }),
 
@@ -190,7 +190,7 @@ class GMap {
 
         js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseout']);
 
-        createSimpleOverlay(newMarker, editable: true, callback: () {
+        createSimpleOverlay(context['id'], editable: true, callback: () {
           js.gmaps['event']['addListener'].apply([marker, 'mouseout', mouseOutFunction]);
         });
       })
@@ -216,22 +216,32 @@ class GMap {
     if (editable) {
       heading = new InputElement(type: 'text')
         ..setAttribute('value', data['heading'])
-        ..id = 'heading-input';
+        ..id = 'heading-input'
+        ..autofocus = true;
 
       body = new TextAreaElement()
         ..text = data['body']
         ..id = 'body-input';
 
       ButtonElement confirmButton = new ButtonElement()
-        ..text = 'Save Marker'
+        ..text = 'Save'
         ..id = 'save-marker';
+
+      ButtonElement deleteButton = new ButtonElement()
+        ..text = 'Remove'
+        ..id = 'remove-marker';
+
       overlayContainer.children.add(confirmButton);
+      overlayContainer.children.add(deleteButton);
 
     } else {
-      heading = new Text(data['heading']);
+      heading = new DivElement()
+        ..classes.add('text')
+        ..text = data['heading'];
 
       body = new ParagraphElement()
-        ..text = data['body'];
+        ..text = data['body']
+        ..classes.add('text');
     }
 
     headingContainer.children.add(heading);
@@ -245,15 +255,15 @@ class GMap {
   * at the specified position with specified data for specified marker.
   * The marker will hold the data (heading and body text).
 */
-  void createSimpleOverlay(Map marker, {editable: false, callback}) {
+  void createSimpleOverlay(int markerId, {editable: false, callback}) {
     var params = {
       'overlay' : {
-        'latLng' : marker['latLng'],
+        'latLng' : _markers[markerId]['latLng'],
         'options' : {
-          'content' : createSimpleOverlayTemplate(marker['data'], editable: editable),
+          'content' : createSimpleOverlayTemplate(_markers[markerId]['data'], editable: editable),
           'offset' : {
-            'y' : -32,
-            'x' : 12
+            'y' : -80,
+            'x' : 30
           }
         },
         'events' : {
@@ -261,18 +271,23 @@ class GMap {
             // event[0] is a mouse click event that was triggered by
             // clicking on the button
             if (event[0].target.id == 'save-marker') {
-              String headingText = querySelector('#heading-input').value;
-              String bodyText = querySelector('#body-input').value;
+              InputElement heading = querySelector('#heading-input');
+              InputElement body = querySelector('#body-input');
 
-              marker['data']['heading'] = headingText;
-              marker['data']['body'] = bodyText;
+              String headingText = heading.value;
+              String bodyText = body.value;
+
+              _markers[markerId]['data']['heading'] = headingText;
+              _markers[markerId]['data']['body'] = bodyText;
 
               clearAllOverlays();
 
               if (callback != null) {
                 callback();
               }
-
+            } else if (event[0].target.id == 'remove-marker') {
+              _removeMarker(_markers[markerId]['id']);
+              clearAllOverlays();
             }
           })
         }
@@ -286,7 +301,64 @@ class GMap {
     var params = {
       'clear' : 'overlay'
     };
+
     js.gmap3(params);
+  }
+
+  void _removeMarker(int markerId) {
+    var params = {
+      'clear' : {
+        'id' : markerId.toString()
+      }
+    };
+
+    js.gmap3(params);
+
+    _markers.remove(markerId);
+  }
+
+  void loadMarkersFromJson() {
+    var newMarkers = [{
+      'latLng' : [47, 18],
+      'data' : {
+          'heading' : 'prvy',
+          'body' : 'telo'
+      }
+    }, {
+        'latLng' : [46, 18],
+        'data' : {
+            'heading' : 'druhy',
+            'body' : 'telo'
+        }
+    }, {
+        'latLng' : [45, 18],
+        'data' : {
+            'heading' : 'treti',
+            'body' : 'telo'
+        }
+    }, {
+        'latLng' : [44, 18],
+        'data' : {
+            'heading' : 'stvrty',
+            'body' : 'telo'
+        }
+    }];
+
+    var jsonMarkers = JSON.encode(newMarkers);
+    newMarkers = JSON.decode(jsonMarkers);
+
+
+//    window.open("data:text/html", 'test', "_blank");
+
+    for (Map marker in newMarkers) {
+      marker['id'] = _lastMarkerId++;
+      _markers[marker['id']] = marker;
+    }
+
+    addMarkersToMap(newMarkers, _generateNewMarkerEvents());
+
+
+
   }
 
 }

@@ -14,6 +14,22 @@
 				"buffer_size": 29735,
 				"line_ending": "Unix"
 			}
+		},
+		{
+			"file": "/home/lamosty/Downloads/gmap3v5.1.1/gmap3.js",
+			"settings":
+			{
+				"buffer_size": 73438,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/home/lamosty/dev/static-webs/mapengine_presentation/mapengine_presentation.html",
+			"settings":
+			{
+				"buffer_size": 8251,
+				"line_ending": "Unix"
+			}
 		}
 	],
 	"build_system": "",
@@ -79,7 +95,7 @@
 	],
 	"find":
 	{
-		"height": 58.0
+		"height": 37.0
 	},
 	"find_in_files":
 	{
@@ -112,7 +128,7 @@
 	"groups":
 	[
 		{
-			"selected": 0,
+			"selected": 2,
 			"sheets":
 			[
 				{
@@ -136,8 +152,168 @@
 						{
 							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
-						"translation.x": -0.0,
+						"translation.x": 0.0,
 						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/lamosty/Downloads/gmap3v5.1.1/gmap3.js",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 73438,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								11435,
+								11435
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 7495.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/lamosty/dev/static-webs/mapengine_presentation/mapengine_presentation.html",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8251,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7768,
+								7768
+							]
+						],
+						"settings":
+						{
+							"codeintel": true,
+							"codeintel_config":
+							{
+								"JavaScript":
+								{
+									"codeintel_max_recursive_dir_depth": 2,
+									"codeintel_scan_files_in_project": false,
+									"javascriptExtraPaths":
+									[
+									]
+								},
+								"PHP":
+								{
+									"codeintel_max_recursive_dir_depth": 5,
+									"codeintel_scan_files_in_project": false,
+									"phpExtraPaths":
+									[
+									]
+								},
+								"Python":
+								{
+									"env":
+									{
+									}
+								}
+							},
+							"codeintel_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_live": true,
+							"codeintel_live_enabled_languages":
+							[
+								"JavaScript",
+								"Mason",
+								"XBL",
+								"XUL",
+								"RHTML",
+								"SCSS",
+								"Python",
+								"HTML",
+								"Ruby",
+								"Python3",
+								"XML",
+								"Sass",
+								"XSLT",
+								"Django",
+								"HTML5",
+								"Perl",
+								"CSS",
+								"Twig",
+								"Less",
+								"Smarty",
+								"Node.js",
+								"Tcl",
+								"TemplateToolkit",
+								"PHP"
+							],
+							"codeintel_max_recursive_dir_depth": 10,
+							"codeintel_scan_exclude_dir":
+							{
+								"JavaScript":
+								[
+									"/build/",
+									"/min/"
+								]
+							},
+							"codeintel_scan_files_in_project": true,
+							"codeintel_selected_catalogs":
+							[
+								"PyWin32",
+								"jQuery",
+								"Rails"
+							],
+							"codeintel_snippets": true,
+							"codeintel_syntax_map":
+							{
+								"Python Django": "Python"
+							},
+							"codeintel_tooltips": "popup",
+							"sublime_auto_complete": true,
+							"syntax": "Packages/HTML/HTML.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 3853.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,

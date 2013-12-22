@@ -1,4 +1,3 @@
-// @import "variables";
 @import "compass/typography";
 @import "compass/support";
 
@@ -7,12 +6,20 @@ $base-font-size: 14px;
 $base-line-height: 20px;
 $relative-font-sizing: true;
 
-
 // UI
 $beige: #c4af89;
+$white-menu: #f2e3d5;
+$white-menu-hover: #f2f2f2;
+$light-brown-article: #baa57f;
+$white-footer-border: #e9e5dd;
+$brown-unit-intro: #534741;
 
 $font-headings: 'Racing Sans One', cursive;
 $font-text: 'Raleway', sans-serif;
+
+// Some of the bootstrap variables
+$break-xs: 767px;
+$break-sm: 991px;
 
 @mixin image-text-replacement {
   display: block;
