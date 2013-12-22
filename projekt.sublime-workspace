@@ -8,10 +8,10 @@
 	"buffers":
 	[
 		{
-			"file": "/home/lamosty/dev/realestateproject/app/assets/javascripts/map.js.coffee",
+			"file": "/home/lamosty/dev/MapEngine/vendor/assets/javascripts/gmap3.min.js",
 			"settings":
 			{
-				"buffer_size": 8871,
+				"buffer_size": 29735,
 				"line_ending": "Unix"
 			}
 		}
@@ -65,6 +65,7 @@
 	},
 	"file_history":
 	[
+		"/home/lamosty/dev/realestateproject/app/assets/javascripts/map.js.coffee",
 		"/media/Work/dev/MapEngine/projekt.sublime-project",
 		"/media/Work/dev/static-webs/chris/rozpocty-stavieb/projekt.sublime-project",
 		"/home/lamosty/Downloads/templates/rttheme17/about-us.html",
@@ -116,31 +117,30 @@
 			[
 				{
 					"buffer": 0,
-					"file": "/home/lamosty/dev/realestateproject/app/assets/javascripts/map.js.coffee",
+					"file": "/home/lamosty/dev/MapEngine/vendor/assets/javascripts/gmap3.min.js",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8871,
+						"buffer_size": 29735,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3029,
-								3029
+								0,
+								0
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Better CoffeeScript/CoffeeScript.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
 						},
-						"translation.x": 0.0,
-						"translation.y": 2268.0,
+						"translation.x": -0.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -177,6 +177,10 @@
 		]
 	},
 	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
 	"project": "projekt.sublime-project",
 	"replace":
 	{

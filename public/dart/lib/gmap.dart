@@ -155,45 +155,46 @@ class GMap {
       _markers[newMarker['id']] = newMarker;
       _lastMarkerId++;
 
-      addMarkersToMap([newMarker], {
-        'mouseover': js.func((jsThis, marker, event, context) {
-          createSimpleOverlay(_markers[context['id']]);
-        }),
-        'mouseout' : js.func((jsThis, marker, event, context) {
-          clearAllOverlays();
-        }),
-        'click' : js.func((jsThis, marker, event, context) {
-          clearAllOverlays();
-
-          var params = {
-            'get' : {
-              'id' : newMarker['id']
-            }
-          };
-
-//          var marker = js.gmap3(params);
-//          print(params);
-
-          var func = js.func((jsThis, sd) {
-            clearAllOverlays();
-          });
-
-          var func2 = js.func((jsThis, marker, event, context) {
-            createSimpleOverlay(_markers[context['id']]);
-          });
-
-          js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseover']);
-          js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseout']);
-
-          createSimpleOverlay(newMarker, editable: true, callback: () {
-            js.gmaps['event']['addListener'].apply([marker, 'mouseout', func]);
-            js.gmaps['event']['addListener'].apply([marker, 'mouseover', func2]);
-          });
-        })
-      });
+      addMarkersToMap([newMarker], _newMarkerEvents(newMarker));
       createSimpleOverlay(newMarker, editable: true);
 
     });
+  }
+
+/**
+  * Returns events for new marker that has been added to the map
+  * by clicking on it.
+*/
+  Map _newMarkerEvents(Map newMarker) {
+    return {
+
+      'mouseover': js.func((jsThis, marker, event, context) {
+
+        createSimpleOverlay(_markers[context['id']]);
+
+      }),
+
+      'mouseout' : js.func((jsThis, marker, event, context) {
+
+        clearAllOverlays();
+
+      }),
+
+      'click' : js.func((jsThis, marker, event, context) {
+
+        clearAllOverlays();
+
+        var mouseOutFunction = js.func((jsThis, event) {
+          clearAllOverlays();
+        });
+
+        js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseout']);
+
+        createSimpleOverlay(newMarker, editable: true, callback: () {
+          js.gmaps['event']['addListener'].apply([marker, 'mouseout', mouseOutFunction]);
+        });
+      })
+    };
   }
 
 /**
@@ -249,7 +250,11 @@ class GMap {
       'overlay' : {
         'latLng' : marker['latLng'],
         'options' : {
-          'content' : createSimpleOverlayTemplate(marker['data'], editable: editable)
+          'content' : createSimpleOverlayTemplate(marker['data'], editable: editable),
+          'offset' : {
+            'y' : -32,
+            'x' : 12
+          }
         },
         'events' : {
           'click' : js.func((jsThis, sender, event, context) {
