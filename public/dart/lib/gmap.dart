@@ -7,7 +7,7 @@ import 'package:mapengine/js_helper.dart';
 
 class GMap {
   // Properties
-  final String elementId;
+  final String elementId; // HTML element that the map is bound to.
   Map mapOptions;
   Map mapEvents = {};
   // used to identify markers, should increment if new marker is added
@@ -178,9 +178,16 @@ class GMap {
             clearAllOverlays();
           });
 
+          var func2 = js.func((jsThis, marker, event, context) {
+            createSimpleOverlay(_markers[context['id']]);
+          });
+
+          js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseover']);
           js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseout']);
+
           createSimpleOverlay(newMarker, editable: true, callback: () {
             js.gmaps['event']['addListener'].apply([marker, 'mouseout', func]);
+            js.gmaps['event']['addListener'].apply([marker, 'mouseover', func2]);
           });
         })
       });
