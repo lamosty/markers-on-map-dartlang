@@ -2,7 +2,6 @@ library gmap;
 
 import 'dart:async';
 import 'dart:html';
-export 'dart:html';
 import 'package:mapengine/js_helper.dart';
 import 'dart:convert';
 
@@ -11,6 +10,7 @@ class GMap {
   final String elementId; // HTML element that the map is bound to.
   Map mapOptions;
   Map mapEvents = {};
+  Map mapOnces = {};
   // used to identify markers, should increment if new marker is added
   int _lastMarkerId = -1;
   Map<int, Map> _markers = {}; // map of markers, key is marker's ID
@@ -30,20 +30,30 @@ class GMap {
   }
 
   void setMapOptions({
-    List<double> center
+    List<double> center,
+    int zoom
   }) {
     mapOptions['center'] = center;
+    mapOptions['zoom'] = zoom;
   }
 
-  void addMapEvent(String eventName, Object eventFunction) {
-    mapEvents[eventName] = eventFunction();
+  void addMapEvent(String eventName, Function eventFunction) {
+    mapEvents[eventName] = js.func(eventFunction);
+  }
+  
+  /**
+   * Add events that fire only once (thus the name onces).
+   */
+  void addMapOnces(String eventName, Function eventFunction) {
+    mapOnces[eventName] = js.func(eventFunction);
   }
 
   Map getMapParams() {
     return {
         'map': {
             'options': mapOptions,
-            'events':  mapEvents
+            'events':  mapEvents,
+            'onces': mapOnces
         }
     };
   }
@@ -66,9 +76,27 @@ class GMap {
   void drawMap() {
     // Initialize the map and draw it.
     js.gmap3(getMapParams());
-
   }
 
+ /**
+  * Redraws the map with changed map options.
+  */
+  void redrawMap(Map newMapOptions) {
+    var params = {
+      'map': {
+        'options': newMapOptions
+      }
+    };
+
+    js.gmap3(params);
+  }
+
+/**
+  * Returns Google Map as a normal Google Map JS map version
+*/
+  JsObject getJsMap() {
+    return js.gmap3('get');
+  }
 
   /**
     * This method zooms and centers the map in such a way that all the objects

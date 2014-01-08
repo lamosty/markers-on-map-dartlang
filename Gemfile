@@ -33,6 +33,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem "compass-rails", '~> 1.1.2'
 gem 'haml_coffee_assets'
 gem 'execjs'
+gem "select2-rails"
 
 
 # Use ActiveModel has_secure_password

@@ -28,6 +28,14 @@ class JsHelper {
     
     return jQuery.apply([elementId]).callMethod('gmap3', [jsParams]);
   }
+  
+  /**
+   * Calls jQuery on specified selector with specified method that is 
+   * fed by specified arguments.
+   */
+  JsObject $(String selector, String methodName, [Map args = const {}]) {
+    return jQuery.apply([selector]).callMethod(methodName, [_jsify(args)]);
+  }
 
   JsFunction func(Function f) {
     return new JsFunction.withThis(f);
