@@ -7,42 +7,19 @@
 	},
 	"buffers":
 	[
-		{
-			"file": "/home/lamosty/dev/static-webs/mapengine_presentation/mapengine_presentation.html",
-			"settings":
-			{
-				"buffer_size": 8960,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/home/lamosty/dev/static-webs/mapengine_presentation/sass/screen.scss",
-			"settings":
-			{
-				"buffer_size": 5480,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"contents": "$(document).ready(function() {\n\n  // Page scrolling\n  $('.navbar a').click(function(e) {\n    e.preventDefault();\n    $('html, body').animate({\n      scrollTop: $('#' + $(this).data('target')).offset().top\n\n    }, 500);\n\n  });\n\n  \n\n\n});\n\n",
-			"file": "/home/lamosty/dev/static-webs/mapengine_presentation/js/script.js",
-			"file_size": 233,
-			"file_write_time": 130315932084161710,
-			"settings":
-			{
-				"buffer_size": 237,
-				"line_ending": "Unix"
-			}
-		}
 	],
 	"build_system": "",
 	"command_palette":
 	{
-		"height": 159.0,
+		"height": 201.0,
 		"selected_items":
 		[
 			[
 				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"instal",
 				"Package Control: Install Package"
 			],
 			[
@@ -84,6 +61,25 @@
 	},
 	"file_history":
 	[
+		"/home/lamosty/dev/pricemeter/public/dart/web/properties.dart.js",
+		"/home/lamosty/dev/static-webs/mapengine_presentation/mapengine_presentation.html",
+		"/home/lamosty/dev/static-webs/mapengine_presentation/mapengine_demo.html",
+		"/home/lamosty/dev/static-webs/mapengine_presentation/sass/screen.scss",
+		"/home/lamosty/dev/MapEngine/app/assets/javascripts/markers.js.coffee",
+		"/home/lamosty/dev/MapEngine/app/assets/javascripts/dart_helpers.js.coffee",
+		"/home/lamosty/dev/static-webs/mapengine_presentation/sass/_base.scss",
+		"/home/lamosty/dev/realestateproject/app/views/home/index.html.haml",
+		"/media/Work/dev/map_engine/map_engine/templates/admin/index.html",
+		"/home/lamosty/dev/realestateproject/config/initializers/inflections.rb",
+		"/home/lamosty/dev/realestateproject/app/models/image.rb",
+		"/home/lamosty/dev/realestateproject/app/views/layouts/application.html.haml",
+		"/home/lamosty/dev/realestateproject/config/application.rb",
+		"/media/Work/dev/map_engine/map_engine/map/templates/map/partials/ajax_page.html",
+		"/home/lamosty/dev/MapEngine/app/assets/stylesheets/screen.scss",
+		"/home/lamosty/dev/MapEngine/app/assets/stylesheets/_map.scss",
+		"/home/lamosty/dev/static-webs/mapengine_presentation/dart/web/mapengine.dart.precompiled.js",
+		"/home/lamosty/dev/static-webs/mapengine_presentation/dart/web/mapengine.html",
+		"/home/lamosty/dev/static-webs/mapengine_presentation/js/script.js",
 		"/home/lamosty/dev/MapEngine/vendor/assets/javascripts/gmap3.min.js",
 		"/home/lamosty/Downloads/gmap3v5.1.1/gmap3.js",
 		"/home/lamosty/dev/realestateproject/app/assets/javascripts/map.js.coffee",
@@ -114,6 +110,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"cust",
+			"sati",
 			">\n",
 			"úda"
 		],
@@ -133,407 +131,8 @@
 	"groups":
 	[
 		{
-			"selected": 1,
 			"sheets":
 			[
-				{
-					"buffer": 0,
-					"file": "/home/lamosty/dev/static-webs/mapengine_presentation/mapengine_presentation.html",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 8960,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2494,
-								2494
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/HTML/HTML.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 1308.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "/home/lamosty/dev/static-webs/mapengine_presentation/sass/screen.scss",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5480,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								165,
-								165
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"tab_size": 2,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "/home/lamosty/dev/static-webs/mapengine_presentation/js/script.js",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 237,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								229,
-								229
-							]
-						],
-						"settings":
-						{
-							"codeintel": true,
-							"codeintel_config":
-							{
-								"JavaScript":
-								{
-									"codeintel_max_recursive_dir_depth": 2,
-									"codeintel_scan_files_in_project": false,
-									"javascriptExtraPaths":
-									[
-									]
-								},
-								"PHP":
-								{
-									"codeintel_max_recursive_dir_depth": 5,
-									"codeintel_scan_files_in_project": false,
-									"phpExtraPaths":
-									[
-									]
-								},
-								"Python":
-								{
-									"env":
-									{
-									}
-								}
-							},
-							"codeintel_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_live": true,
-							"codeintel_live_enabled_languages":
-							[
-								"JavaScript",
-								"Mason",
-								"XBL",
-								"XUL",
-								"RHTML",
-								"SCSS",
-								"Python",
-								"HTML",
-								"Ruby",
-								"Python3",
-								"XML",
-								"Sass",
-								"XSLT",
-								"Django",
-								"HTML5",
-								"Perl",
-								"CSS",
-								"Twig",
-								"Less",
-								"Smarty",
-								"Node.js",
-								"Tcl",
-								"TemplateToolkit",
-								"PHP"
-							],
-							"codeintel_max_recursive_dir_depth": 10,
-							"codeintel_scan_exclude_dir":
-							{
-								"JavaScript":
-								[
-									"/build/",
-									"/min/"
-								]
-							},
-							"codeintel_scan_files_in_project": true,
-							"codeintel_selected_catalogs":
-							[
-								"PyWin32",
-								"jQuery",
-								"Rails"
-							],
-							"codeintel_snippets": true,
-							"codeintel_syntax_map":
-							{
-								"Python Django": "Python"
-							},
-							"codeintel_tooltips": "popup",
-							"sublime_auto_complete": true,
-							"syntax": "Packages/JavaScript/JavaScript.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
-					"type": "text"
-				}
 			]
 		}
 	],
@@ -583,6 +182,18 @@
 		"height": 0.0,
 		"selected_items":
 		[
+			[
+				"index.html.",
+				"realestateproject/app/views/home/index.html.haml"
+			],
+			[
+				"inde",
+				"map_engine/templates/admin/index.html"
+			],
+			[
+				"application.html",
+				"realestateproject/app/views/layouts/application.html.haml"
+			],
 			[
 				"map",
 				"realestateproject/app/assets/javascripts/map.js.coffee"
@@ -644,7 +255,7 @@
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": false,
+	"side_bar_visible": true,
 	"side_bar_width": 220.0,
 	"status_bar_visible": true,
 	"template_settings":

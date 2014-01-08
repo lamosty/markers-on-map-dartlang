@@ -8,6 +8,10 @@
 		{
 			"follow_symlinks": true,
 			"path": "/media/Work/dev/map_engine/map_engine"
+		},
+		{
+			"follow_symlinks": true,
+			"path": "/home/lamosty/dev/MapEngine"
 		}
 	]
 }

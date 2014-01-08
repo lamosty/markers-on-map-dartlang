@@ -1,31 +1,23 @@
-.demo-page
-  .main-map.map-container
+.map-page.clearfix
+  .map-controls.col-md-4
+    .input-group
+      %input.search-input.form-control{type: "text"}
+      %span.input-group-btn
+        %button.search-btn.btn.btn-default{type: "button"}
+          %span.glyphicon.glyphicon-search
+
+    %h2
+      Map Filtering Options
+
+      .filter-container
+        %h3 locality
+        %input#locality-filter.multiselect-input.form-control{type: "text"}
+
+        %h3 type
+        %input#type-filter.multiselect-input.form-control{type: "text"}
+
+  .main-map.map-container.col-md-8
     #map
-
-  .map-controls
-    .json.row
-      %h3 Export and Import
-      .export-container
-        %button#prepare-json-export.btn.btn-primary.btn-lg.btn-block(type="button") Prepare JSON export
-      %hr
-      %h4 Import markers from JSON
-      .input-group
-        %input#json-input.form-control(type="text" placeholder="paste json here")
-        %span.input-group-btn
-          %button#import-markers.btn.btn-default(type="button") Import
-    %hr
-    .remove-markers.row
-      %button#remove-all-markers.btn.btn-primary.btn-lg.btn-block(type="button") Remove All Markers
-    %hr
-    .row
-      %button#import-example-markers.btn.btn-success.btn-lg.btn-block(type="button") Import Example Markers
-    %hr
-    .row
-      %h3 Legend and Instructions
-      %p To add marker to the map: click anywhere on the map
-      %p To show overlay, hover with your mouse over the marker.
-      %p To edit overlay info (title, description), click on the marker and edit it
-
 
 - content_for :scripts do
   = javascript_include_tag "https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"

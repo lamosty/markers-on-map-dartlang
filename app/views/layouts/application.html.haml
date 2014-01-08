@@ -9,18 +9,38 @@
     = csrf_meta_tags
 
   %body
-    .wrapper
-      .navbar{:role => "navigation"}
+    %nav.main-nav
+      .navbar{role: "navigation"}
         .container
           .navbar-header
-            = render :partial => "layouts/menu"
-          .menu-container.collapse.navbar-collapse
-            = render :partial => "layouts/session"
+            = render :partial => "layouts/navbar_header"
+          #navbar-menu-top.menu-container.collapse.navbar-collapse
+            = render :partial => "layouts/navbar_items"
 
 
-      = yield
-      .footer
-        %span &copy; 2013 MapEngine
+    = yield
+    %footer#contact
+      %nav.bottom-nav
+        .navbar{role: "navigation"}
+          .container
+            .navbar-header
+              .mapengine-contact-icons.row
+                .icon
+                  .icon-text fb
+                .icon
+                  .icon-text mail
+            #bottom-nav-collapse.menu-container.collapse.navbar-collapse
+              %ul.nav.navbar-nav.navbar-right
+                %li
+                  %a{"data-target" => "intro", href: "/"} Intro
+                %li
+                  %a{"data-target" => "features", href: "/"} Features
+                %li
+                  %a{"data-target" => "benefits", href: "/"} Benefits
+                %li
+                  %a{"data-target" => "customers", href: "/"} Satisfied Customers
+                %li
+                  %a{href: "mapengine_demo.html"} Try DEMO
 
 
     = yield :js_data
