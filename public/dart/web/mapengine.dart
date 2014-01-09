@@ -14,10 +14,11 @@ class MapEngine {
   MapEngine([String mapContainerId = '#map']) {
     map = new GMap(mapContainerId);
     initializeMap();
-    map.drawMap();
     
     attachAllEventListeners();
     initializeMultiSelectBoxes();
+    
+    map.drawMap();
   }
   
   void initializeMap() {
@@ -28,6 +29,8 @@ class MapEngine {
         center: mapCenter,
         zoom: mapZoomLevel
     );
+    
+    map.addMapEvent('click', createNewMarker);   
   }
   
   /**
@@ -41,6 +44,62 @@ class MapEngine {
     js.$('#locality-select', 'select2');
     js.$('#type-select', 'select2');
   }
+  
+  Function createNewMarker(jsThis, sender, event, context) {
+    // Clear overlays that might be opened.
+    map.clearAllOverlays();
+
+    var jsLatLng = event['latLng'];
+
+    int newMarkerId = map.addNewMarker(
+        jsLatLng['b'], jsLatLng['d'],
+        markerData: {
+          'heading' : '',
+          'body' : '',
+          'type' : ''
+        },
+        markerEvents: defaultMarkerEvents()
+    );
+
+    map.drawMarkersOnMap([newMarkerId]);
+    map.createSimpleOverlay(newMarkerId, editable: true);
+  }
+  
+  /**
+   * Returns events for new marker that has been added to the map
+   * by clicking on it.
+  */
+  Map defaultMarkerEvents() {
+    return {
+
+      'mouseover': js.func((jsThis, marker, event, context) {
+        map.createSimpleOverlay(context['id']);
+
+      }),
+
+      'mouseout' : js.func((jsThis, marker, event, context) {
+
+        map.clearAllOverlays();
+
+      }),
+
+      'click' : js.func((jsThis, marker, event, context) {
+
+        map.clearAllOverlays();
+
+        var mouseOutFunction = js.func((jsThis, event) {
+          map.clearAllOverlays();
+        });
+
+        js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseout']);
+
+        map.createSimpleOverlay(context['id'], editable: true, callback: () {
+          js.gmaps['event']['addListener'].apply([marker, 'mouseout', mouseOutFunction]);
+        });
+      })
+    };
+  }
+
 }
 
 

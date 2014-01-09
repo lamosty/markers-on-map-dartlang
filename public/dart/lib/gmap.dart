@@ -11,12 +11,13 @@ class GMap {
   Map mapOptions;
   Map mapEvents = {};
   Map mapOnces = {};
-  // used to identify markers, should increment if new marker is added
-  int _lastMarkerId = -1;
   Map<int, Map> _markers = {}; // map of markers, key is marker's ID
 
   // Helpers
   JsHelper js;
+  
+  // Getters
+  int get nextMarkerId => _markers.length;
 
   GMap(this.elementId) {
     // Initialize JsHelper with #map element id
@@ -105,12 +106,43 @@ class GMap {
   void autofit() {
     js.gmap3('autofit');
   }
+  
+  int addNewMarker(
+      double lat, double lng, {
+        Map markerOptions : const {}, Map markerData : const {}, 
+        Map markerEvents : const {}
+      }
+  ) {
+    var newMarker = {
+      'latLng' : [lat, lng],
+      'option' : markerOptions,
+      'data' : markerData,
+      'events' : markerEvents,
+      'id' : nextMarkerId
+    };
+    
+    _markers[nextMarkerId] = newMarker;
+    
+    // Return ID of currently added marker.
+    return nextMarkerId - 1;
+  }
 
-  void addMarkersToMap(List<Map> markers, Map events, {bool autofit: false}) {
+  /**
+   * Draws markers specified by their IDs on the Google Map.
+   * If autofit is set to true, map will zoom out so all new added
+   * markers can be seen on the map.
+   */
+  void drawMarkersOnMap(List<int> markerIds, {bool autofit: false}) {
     var params = {
         'marker': {
-            'values': markers,
-            'events': events
+            'values': () {
+              var markersInList = [];
+              for (var markerId in markerIds) {
+                markersInList.add(_markers[markerId]);
+              }
+              
+              return markersInList;
+            }()
         }
     };
 
@@ -120,7 +152,7 @@ class GMap {
       this.autofit();
     }
   }
-
+  
   void reloadMapWithNewMarkers({
     List<Map> markers,
     bool autofit: true,
@@ -169,68 +201,6 @@ class GMap {
         ..append(markerPositionDiv);
 
     });
-  }
-
-  // Part of WEGA project
-  JsFunction mapMouseDown() {
-    return js.func((jsThis, _, event, something) {
-
-      // Clear overlays that might be opened.
-      clearAllOverlays();
-
-      var jsLatLng = event['latLng'];
-
-      var newMarker = {
-        'latLng' : [jsLatLng['nb'], jsLatLng['ob']],
-        'data' : {
-          'heading' : '',
-          'body' : ''
-        },
-        'id' : ++_lastMarkerId
-      };
-
-      _markers[newMarker['id']] = newMarker;
-
-      addMarkersToMap([newMarker], _generateNewMarkerEvents());
-      createSimpleOverlay(newMarker['id'], editable: true);
-
-    });
-  }
-
-/**
-  * Returns events for new marker that has been added to the map
-  * by clicking on it.
-*/
-  Map _generateNewMarkerEvents() {
-    return {
-
-      'mouseover': js.func((jsThis, marker, event, context) {
-
-        createSimpleOverlay(context['id']);
-
-      }),
-
-      'mouseout' : js.func((jsThis, marker, event, context) {
-
-        clearAllOverlays();
-
-      }),
-
-      'click' : js.func((jsThis, marker, event, context) {
-
-        clearAllOverlays();
-
-        var mouseOutFunction = js.func((jsThis, event) {
-          clearAllOverlays();
-        });
-
-        js.gmaps['event'].callMethod('clearListeners', [marker, 'mouseout']);
-
-        createSimpleOverlay(context['id'], editable: true, callback: () {
-          js.gmaps['event']['addListener'].apply([marker, 'mouseout', mouseOutFunction]);
-        });
-      })
-    };
   }
 
 /**
