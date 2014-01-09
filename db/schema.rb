@@ -15,10 +15,14 @@ ActiveRecord::Schema.define(version: 20131130102401) do
 
   create_table "markers", force: true do |t|
     t.string   "title"
-    t.datetime "created_at"
-    t.datetime "updated_at"
     t.decimal  "lat",        precision: 10, scale: 6
     t.decimal  "lng",        precision: 10, scale: 6
+    t.string   "street"
+    t.integer  "zip"
+    t.integer  "city_id"
+    t.integer  "country_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
 end
