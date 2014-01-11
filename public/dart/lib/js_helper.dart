@@ -23,7 +23,7 @@ class JsHelper {
     if (params is String) {
       jsParams = params;
     } else if (params is Map) {
-      jsParams = _jsify(params);
+      jsParams = jsify(params);
     }
     
     return jQuery.apply([elementId]).callMethod('gmap3', [jsParams]);
@@ -34,7 +34,7 @@ class JsHelper {
    * fed by specified arguments.
    */
   JsObject $(String selector, String methodName, [Map args = const {}]) {
-    return jQuery.apply([selector]).callMethod(methodName, [_jsify(args)]);
+    return jQuery.apply([selector]).callMethod(methodName, [jsify(args)]);
   }
 
   JsFunction func(Function f) {
@@ -43,7 +43,7 @@ class JsHelper {
 
   // Private methods
 
-  JsObject _jsify(params) {
+  JsObject jsify(params) {
     return new JsObject.jsify(params);
   }
 

@@ -9,7 +9,8 @@ import 'dart:math' as math;
 class GMap {
   // Private properties
   Map<int, Map> _markers = {}; // map of markers, key is marker's ID
-  Map<String, Map> _markerIcons = {}; // map of marker icons used on the GMap, key is icon url
+  Map<String, JsObject> _markerIcons = {}; // map of marker icons used on the GMap, key is icon url
+  int _lastMarkerId = -1; // Unique id of the last marker placed on the map.
   
   // Public properties
   final String elementId; // HTML element that the map is bound to.
@@ -22,7 +23,7 @@ class GMap {
   JsHelper js;
   
   // Getters
-  int get nextMarkerId => _markers.length;
+  int get nextMarkerId => ++_lastMarkerId;
 
   GMap(this.elementId) {
     // Initialize JsHelper with #map element id
@@ -140,18 +141,21 @@ class GMap {
         markerOptions['icon'] = _iconGenerator(markerOptions['icon']);
       }
     }
+    
+    int newMarkerId = nextMarkerId;
+    
     var newMarker = {
       'latLng' : latLng,
       'options' : markerOptions,
       'data' : markerData,
       'events' : markerEvents,
-      'id' : nextMarkerId.toString()
+      'id' : newMarkerId.toString()
     };
         
-    _markers[nextMarkerId] = newMarker;
+    _markers[newMarkerId] = newMarker;
     
     // Return ID of currently added marker.
-    return nextMarkerId - 1;
+    return newMarkerId;
   }
 
   /**
@@ -264,15 +268,14 @@ class GMap {
   }
 
   void removeMarker(int markerId) {
+    _markers.remove(markerId);
+    
     var params = {
       'clear' : {
         'id' : markerId.toString()
       }
     };
-
-    js.gmap3(params);
-
-    _markers.remove(markerId);
+    js.gmap3(params);   
   }
   
   /**
@@ -282,6 +285,9 @@ class GMap {
     if (_markers.containsKey(markerId)) {
       if (iconUrl != null) {
         _markers[markerId]['options']['icon'] = _iconGenerator(iconUrl, iconSize);
+        
+        var jsMarker = getJsMarker(markerId);
+        jsMarker.callMethod('setIcon', [_markers[markerId]['options']['icon']]);
       } 
     }
   }
@@ -291,7 +297,7 @@ class GMap {
    * saves it into local cache. Next time the same icon is being called,
    * it loads from cache instead of creating new one.
    */
-  Map _iconGenerator(String iconUrl, [List<int> iconSize]) {
+  JsObject _iconGenerator(String iconUrl, [List<int> iconSize]) {
     if (_markerIcons.containsKey(iconUrl)) {
       return _markerIcons[iconUrl];
     }
@@ -302,11 +308,11 @@ class GMap {
     
     var iconSizeObject = new JsObject(js.gmaps['Size'], iconSize);
     
-    _markerIcons[iconUrl] = {
+    _markerIcons[iconUrl] = js.jsify({
       'url' : iconUrl,
       'size' : iconSizeObject,
       'anchor' : new JsObject(js.gmaps['Point'], [17, 15])
-    };
+    });
     
     return _markerIcons[iconUrl];
   }

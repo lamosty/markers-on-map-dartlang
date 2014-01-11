@@ -13,6 +13,12 @@ class MapEngine {
   
   int _lastMarkerId = -1; // Id of the last marker that was shown on the GMap
   
+  final Map<String, String> _markerIcons = {
+    'mapengine' : '/assets/markers/mapengine.png',
+    'home' : '/assets/markers/home.png',
+    'work' : '/assets/markers/work.png'
+  };
+  
   MapEngine([String mapContainerId = '#map']) {
     map = new GMap(mapContainerId);
     initializeMap();
@@ -60,10 +66,10 @@ class MapEngine {
         markerData: {
           'heading' : '',
           'body' : '',
-          'type' : ''
+          'type' : 'mapengine'
         },
         markerOptions: {
-          'icon' : '/assets/markers/mapengine.png'
+          'icon' : _markerIcons['mapengine']
         },
         markerEvents : defaultMarkerEvents()
     );
@@ -184,14 +190,24 @@ class MapEngine {
     headingContainer.children.add(heading);
     bodyContainer.children.add(body);
     
-    // Marker types represented by icons.  
-    typesContainer.children.addAll([
-        _typeContainerTemplate('Engine', 'mapengine', 'engine', editable),
-        _typeContainerTemplate('Home', 'home', 'home', editable, true),
-        _typeContainerTemplate('Work', 'workoffice', 'work', editable)
-        ]
-    );
+    List<Map> markerTypes = [
+      {'heading' : 'Engine', 'iconName' : 'mapengine', 'inputValue' : 'mapengine'},
+      {'heading' : 'Home', 'iconName' : 'home', 'inputValue' : 'home'},
+      {'heading' : 'Work', 'iconName' : 'work', 'inputValue' : 'work'}
+    ];
     
+    for (var markerType in markerTypes) {
+      bool selectedType = false;
+      if (markerType['inputValue'] == marker['data']['type']) {
+        selectedType = true;
+      }
+      typesContainer.children.add(_typeContainerTemplate(
+          markerType['heading'],
+          markerType['iconName'],
+          markerType['inputValue'],
+          editable, selectedType
+      ));
+    }   
 
     return overlayContainer.outerHtml;
   }
@@ -223,6 +239,10 @@ class MapEngine {
       ..value = inputValue
       ..name = 'radio-group';
       
+      if (selected) {
+        input.attributes['checked'] = 'checked';
+      }
+      
       typeContainer.children.add(input);
     }
     
@@ -233,9 +253,14 @@ class MapEngine {
     return js.func((jsThis, sender, event, context) {
       // event[0] is a mouse click event that was triggered by
       // clicking on the button
-      if (event[0].target.id == 'save-marker') {
+      HtmlElement target = event[0].target;
+
+      // Button to save the marker
+      if (target.id == 'save-marker') {
+        
         InputElement heading = querySelector('#heading-input');
         InputElement body = querySelector('#body-input');
+        InputElement type = querySelector('input[checked="checked"]');
 
         String headingText = heading.value;
         String bodyText = body.value;
@@ -243,17 +268,40 @@ class MapEngine {
         var marker = map.getMarker(markerId);
         marker['data']['heading'] = headingText;
         marker['data']['body'] = bodyText;
+        marker['data']['type'] = type.value;
         
         _lastMarkerId = -1;
         
         map.clearAllOverlays();
         
-      } else if (event[0].target.id == 'remove-marker') {
+      } 
+      // Button to remove the marker
+      else if (event[0].target.id == 'remove-marker') {
+        print('removing');
+        _lastMarkerId = -1;
+        
         map.removeMarker(markerId);
-        
-        _lastMarkerId = -1;
-        
+           
         map.clearAllOverlays();
+      } 
+      // Marker type switcher
+      else if (target.id != 'heading-input' && target.id != 'body-input') {
+        String nodeName = target.nodeName;
+        
+        querySelector('.selected')
+        ..classes.remove('selected')
+        ..querySelector("input").attributes.remove('checked');
+        
+        if (nodeName == 'IMG' || nodeName == 'INPUT' || nodeName == 'H4') {
+          target.parent.classes.add('selected');
+          target.parent.querySelector("input").attributes['checked'] = 'checked';
+        } else if (nodeName == 'LABEL') {
+          target.classes.add('selected');
+          target.querySelector("input").attributes['checked'] = 'checked';
+        }
+        
+        var typeInput = querySelector('.selected').querySelector('input') as InputElement;
+        map.changeMarkerOptions(markerId, iconUrl: _markerIcons[typeInput.value]);
       }
     });
   }
