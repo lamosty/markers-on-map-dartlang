@@ -462,7 +462,7 @@ footer {
 }
 
 .map-item {
-  width: 180px;
+  width: 210px;
 
   .common-heading {
     font-family: $font-headings;
@@ -490,7 +490,7 @@ footer {
     input[type="text"] {
       @extend .common-heading;
       height: 35px;
-      width: 180px;
+      width: 210px;
       margin: 0;
       border: 0;
       background-color: transparent;
@@ -514,7 +514,7 @@ footer {
 
     textarea {
       @extend .common-body;
-      width: 180px;
+      width: 210px;
       height: 65px;
       border: 0;
       background-color: transparent;
@@ -528,8 +528,44 @@ footer {
     }
   }
 
+  .types {
+    background-color: $light-brown-article;
+    @include floatfix;
+
+    .type {
+      float: left;
+      text-align: center;
+      width: 70px;
+      padding-bottom: 10px;
+
+      &:hover {
+        background-color: $brown-unit-intro;
+        color: $light-brown-article;
+        cursor: pointer;
+      }
+
+      &.selected {
+        background-color: $brown-unit-intro;
+        color: $light-brown-article;
+      }
+
+    }
+
+    h4 {
+      margin: 0;
+      padding: 4px 0;
+    }
+
+    img {
+      display: block;
+      margin: 0 auto;
+    }
+
+
+  }
+
   button {
-    width: 90px;
+    width: 105px;
     border: 0;
     height: 35px;
     font-size: 16px;

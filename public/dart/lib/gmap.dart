@@ -4,14 +4,19 @@ import 'dart:async';
 import 'dart:html';
 import 'package:mapengine/js_helper.dart';
 import 'dart:convert';
+import 'dart:math' as math;
 
 class GMap {
-  // Properties
+  // Private properties
+  Map<int, Map> _markers = {}; // map of markers, key is marker's ID
+  Map<String, Map> _markerIcons = {}; // map of marker icons used on the GMap, key is icon url
+  
+  // Public properties
   final String elementId; // HTML element that the map is bound to.
   Map mapOptions;
   Map mapEvents = {};
   Map mapOnces = {};
-  Map<int, Map> _markers = {}; // map of markers, key is marker's ID
+  
 
   // Helpers
   JsHelper js;
@@ -98,6 +103,20 @@ class GMap {
   JsObject getJsMap() {
     return js.gmap3('get');
   }
+    
+  JsObject getJsMarker(int markerId) {
+    return js.gmap3({
+      'get' : {
+        'id' : markerId.toString()
+      }
+    });
+  }
+  
+  void addJsMarkerEvent(JsObject jsMarker, String eventName, JsFunction eventFunction) {
+    js.gmaps['event'].callMethod('addListener', 
+        [jsMarker, eventName, eventFunction]
+    );
+  }
 
   /**
     * This method zooms and centers the map in such a way that all the objects
@@ -108,19 +127,27 @@ class GMap {
   }
   
   int addNewMarker(
-      double lat, double lng, {
-        Map markerOptions : const {}, Map markerData : const {}, 
+      List<double> latLng, 
+      {
+        Map markerOptions : const {}, 
+        Map markerData : const {}, 
         Map markerEvents : const {}
       }
   ) {
+    if (markerOptions != null) {
+      if (markerOptions.containsKey('icon')) {
+        
+        markerOptions['icon'] = _iconGenerator(markerOptions['icon']);
+      }
+    }
     var newMarker = {
-      'latLng' : [lat, lng],
-      'option' : markerOptions,
+      'latLng' : latLng,
+      'options' : markerOptions,
       'data' : markerData,
       'events' : markerEvents,
-      'id' : nextMarkerId
+      'id' : nextMarkerId.toString()
     };
-    
+        
     _markers[nextMarkerId] = newMarker;
     
     // Return ID of currently added marker.
@@ -190,112 +217,34 @@ class GMap {
     map.callMethod('setCenter', [center]);
   }
 
-  JsFunction getDefaultMousedownEvent() {
-    return js.func((jsThis, marker, event, context) {
-      var markerPosition = marker.callMethod('getPosition', []);
-
-      DivElement markerPositionDiv = new DivElement()
-        ..text = 'Clicked marker position is: $markerPosition';
-
-      querySelector('.map-container')
-        ..append(markerPositionDiv);
-
-    });
+  // Returns marker by markerId.
+  Map getMarker(int markerId) {
+    return _markers.containsKey(markerId) ? _markers[markerId] : {};
   }
-
-/**
-  * Creates overlay (basically something that floats above the Google Map)
-  * with specified data (heading and body texts). If editable flag is on,
-  * overlay creates itself with input boxes where the data can be changed.
-*/
-  String createSimpleOverlayTemplate(Map data, {editable: false}) {
-    DivElement overlayContainer = new DivElement()..classes.add('map-item');
-    DivElement headingContainer = new DivElement()..classes.add('heading');
-    DivElement bodyContainer = new DivElement()..classes.add('body');
-
-    overlayContainer.children.add(headingContainer);
-    overlayContainer.children.add(bodyContainer);
-
-    Node heading;
-    Node body;
-
-    if (editable) {
-      heading = new InputElement(type: 'text')
-        ..setAttribute('value', data['heading'])
-        ..id = 'heading-input'
-        ..autofocus = true;
-
-      body = new TextAreaElement()
-        ..text = data['body']
-        ..id = 'body-input';
-
-      ButtonElement confirmButton = new ButtonElement()
-        ..text = 'Save'
-        ..id = 'save-marker';
-
-      ButtonElement deleteButton = new ButtonElement()
-        ..text = 'Remove'
-        ..id = 'remove-marker';
-
-      overlayContainer.children.add(confirmButton);
-      overlayContainer.children.add(deleteButton);
-
-    } else {
-      heading = new DivElement()
-        ..classes.add('text')
-        ..text = data['heading'];
-
-      body = new ParagraphElement()
-        ..text = data['body']
-        ..classes.add('text');
-    }
-
-    headingContainer.children.add(heading);
-    bodyContainer.children.add(body);
-
-    return overlayContainer.outerHtml;
-  }
-
+  
+  
 /**
   * This method creates simple overlay over the map for specified marker
   * at the specified position with specified data for specified marker.
   * The marker will hold the data (heading and body text).
 */
-  void createSimpleOverlay(int markerId, {editable: false, callback}) {
+  void createSimpleOverlay(
+       int markerId, 
+       String overlayHtmlTemplate, 
+       dynamic overlayClickFunction
+   ) {
     var params = {
       'overlay' : {
         'latLng' : _markers[markerId]['latLng'],
         'options' : {
-          'content' : createSimpleOverlayTemplate(_markers[markerId]['data'], editable: editable),
+          'content' : overlayHtmlTemplate,
           'offset' : {
             'y' : -80,
             'x' : 30
           }
         },
         'events' : {
-          'click' : js.func((jsThis, sender, event, context) {
-            // event[0] is a mouse click event that was triggered by
-            // clicking on the button
-            if (event[0].target.id == 'save-marker') {
-              InputElement heading = querySelector('#heading-input');
-              InputElement body = querySelector('#body-input');
-
-              String headingText = heading.value;
-              String bodyText = body.value;
-
-              _markers[markerId]['data']['heading'] = headingText;
-              _markers[markerId]['data']['body'] = bodyText;
-
-              clearAllOverlays();
-
-              if (callback != null) {
-                callback();
-              }
-            } else if (event[0].target.id == 'remove-marker') {
-              _removeMarker(_markers[markerId]['id']);
-              clearAllOverlays();
-            }
-          })
+          'click' : overlayClickFunction(markerId)
         }
       }
     };
@@ -303,6 +252,9 @@ class GMap {
     js.gmap3(params);
   }
 
+  /**
+   * Clears all overlays from the map.
+   */
   void clearAllOverlays() {
     var params = {
       'clear' : 'overlay'
@@ -311,7 +263,7 @@ class GMap {
     js.gmap3(params);
   }
 
-  void _removeMarker(int markerId) {
+  void removeMarker(int markerId) {
     var params = {
       'clear' : {
         'id' : markerId.toString()
@@ -322,41 +274,105 @@ class GMap {
 
     _markers.remove(markerId);
   }
-
-
-  String exportMarkersAsJSON() {
-    List<Map> markersToExport = new List();
-
-    for (Map marker in _markers.values) {
-      markersToExport.add(marker);
+  
+  /**
+   * Change basic marker options.
+   */
+  void changeMarkerOptions(int markerId, {String iconUrl, List<int> iconSize}) {
+    if (_markers.containsKey(markerId)) {
+      if (iconUrl != null) {
+        _markers[markerId]['options']['icon'] = _iconGenerator(iconUrl, iconSize);
+      } 
     }
-
-    return JSON.encode(markersToExport);
   }
-
-  void importMarkersFromJSON(String markersInJSON) {
-    var newMarkers = JSON.decode(markersInJSON);
-
-    for (Map marker in newMarkers) {
-      marker['id'] = ++_lastMarkerId;
-      _markers[marker['id']] = marker;
+  
+  /**
+   * This method generates new icon based on specified arguments and
+   * saves it into local cache. Next time the same icon is being called,
+   * it loads from cache instead of creating new one.
+   */
+  Map _iconGenerator(String iconUrl, [List<int> iconSize]) {
+    if (_markerIcons.containsKey(iconUrl)) {
+      return _markerIcons[iconUrl];
     }
-
-    addMarkersToMap(newMarkers, _generateNewMarkerEvents(), autofit: true);
-
-  }
-
-  void removeAllMarkersFromMap() {
-    var params = {
-      'clear' : {
-        'name' : "marker"
-      }
+    
+    if (iconSize == null) {
+      iconSize = [32, 37];
+    }
+    
+    var iconSizeObject = new JsObject(js.gmaps['Size'], iconSize);
+    
+    _markerIcons[iconUrl] = {
+      'url' : iconUrl,
+      'size' : iconSizeObject,
+      'anchor' : new JsObject(js.gmaps['Point'], [17, 15])
     };
-
-    js.gmap3(params);
-
-    _markers = {};
+    
+    return _markerIcons[iconUrl];
   }
+  
+  /**
+   * Return markerId by comparing all marker latLng's stored against supplied
+   * latitude and longitude. If there is no such marker with specified lat and lng,
+   * return -1;
+   */
+  int getMarkerIdByLatLng(List<double> latLngInList) {
+    for (var marker in _markers.values) {
+      if (marker['latLng'][0] == latLngInList[0] && marker['latLng'][1] == latLngInList[1]) {
+        return marker['id'];
+      }
+    }
+    
+    return -1;
+  }
+  
+  List<double> extractLatLngFromGoogleMarker(dynamic marker) {
+    var latLng = marker['latLng'];
+    return _shortenLatLngNumberDigits([latLng['b'], latLng['d']]);
+  }
+  
+  List<double> _shortenLatLngNumberDigits(List<double> latLng, [int numOfDigits = 6]) {
+    int pow = math.pow(10, numOfDigits);
+    double lat = (latLng[0] * pow).round() / pow;
+    double lng = (latLng[1] * pow).round() / pow;
+    
+    return [lat, lng];
+  }
+
+
+//  String exportMarkersAsJSON() {
+//    List<Map> markersToExport = new List();
+//
+//    for (Map marker in _markers.values) {
+//      markersToExport.add(marker);
+//    }
+//
+//    return JSON.encode(markersToExport);
+//  }
+//
+//  void importMarkersFromJSON(String markersInJSON) {
+//    var newMarkers = JSON.decode(markersInJSON);
+//
+//    for (Map marker in newMarkers) {
+//      marker['id'] = ++_lastMarkerId;
+//      _markers[marker['id']] = marker;
+//    }
+//
+//    addMarkersToMap(newMarkers, _generateNewMarkerEvents(), autofit: true);
+//
+//  }
+//
+//  void removeAllMarkersFromMap() {
+//    var params = {
+//      'clear' : {
+//        'name' : "marker"
+//      }
+//    };
+//
+//    js.gmap3(params);
+//
+//    _markers = {};
+//  }
 
 }
 
