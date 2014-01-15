@@ -1,7 +1,9 @@
 class Marker < ActiveRecord::Base
-  attr_accessible :title, :lat, :lng, :street,
-                  :zip, :city
+  attr_accessible :heading, :body, :markerType,
+                  :lat, :lng, :street,
+                  :zip, :city, :country
 
-  has_one :city
-  has_one :country
+  belongs_to :city
+  belongs_to :country
+
 end

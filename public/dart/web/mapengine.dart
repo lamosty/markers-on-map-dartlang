@@ -2,6 +2,7 @@ import 'package:mapengine/gmap.dart';
 import 'package:mapengine/js_helper.dart';
 import 'dart:html';
 import 'dart:async';
+import 'dart:convert';
 
 void main() {
   MapEngine mapEngine = new MapEngine('#map');
@@ -23,10 +24,10 @@ class MapEngine {
     map = new GMap(mapContainerId);
     initializeMap();
     
-    attachAllEventListeners();
-    initializeMultiSelectBoxes();
-    
+    attachAllEventListeners(); 
     map.drawMap();
+    
+    initializeAllComponents();
   }
   
   void initializeMap() {
@@ -39,6 +40,7 @@ class MapEngine {
     );
     
     map.addMapEvent('click', createNewMarker);   
+    map.addMapOnces('idle', loadMarkersFromServer);
   }
   
   /**
@@ -48,11 +50,11 @@ class MapEngine {
     
   }
   
-  void initializeMultiSelectBoxes() {
-    js.$('#locality-select', 'select2');
-    js.$('#type-select', 'select2');
+  void initializeAllComponents() {
+    _initializeMultiSelectBoxes();
+    _initializePlacesAutocomplete();
   }
-  
+   
   Function createNewMarker(jsThis, sender, event, context) {
     if (_lastMarkerId != -1) {
       map.removeMarker(_lastMarkerId);
@@ -66,7 +68,11 @@ class MapEngine {
         markerData: {
           'heading' : '',
           'body' : '',
-          'type' : 'mapengine'
+          'markerType' : 'mapengine',
+          'street' : '',
+          'zip' : '',
+          'city' : '',
+          'country' : ''
         },
         markerOptions: {
           'icon' : _markerIcons['mapengine']
@@ -82,6 +88,49 @@ class MapEngine {
     );
     
     _lastMarkerId = newMarkerId;
+  }
+  
+  /**
+   * Loads and draw on the Google Map markers from the server.
+   */
+  Function loadMarkersFromServer(jsThis, sender, event, context) {    
+    var url = "http://${window.location.host}/markers/all.json";
+    
+    HttpRequest.getString(url).then((markers) {
+      Map markersInJson = JSON.decode(markers);
+      List markersInList = JSON.decode(markersInJson['markers']);
+
+      if (markersInList.isEmpty) {
+        return;
+      }
+      
+      print(markersInList);
+      
+      List<int> newMarkersIds = [];
+      
+      for (var marker in markersInList) {
+        newMarkersIds.add(
+          map.addNewMarker(
+            [marker['lat'], marker['lng']],
+            markerData: {
+              'heading' : marker['heading'],
+              'body' : marker['body'],
+              'markerType' : marker['markerType'],
+              'street' : marker['street'],
+              'zip' : marker['zip'],
+              'city' : marker['city']['title'],
+              'country' : marker['country']['title']
+            },
+            markerOptions: {
+              'icon' : _markerIcons[marker['markerType']]
+            },
+            markerEvents : defaultMarkerEvents()
+          )
+        );
+      }
+      
+      map.drawMarkersOnMap(newMarkersIds);
+    });
   }
     
   /**
@@ -136,7 +185,6 @@ class MapEngine {
       })
     };
   }
-  
   
   /**
    * Creates overlay (basically something that floats above the Google Map)
@@ -198,7 +246,7 @@ class MapEngine {
     
     for (var markerType in markerTypes) {
       bool selectedType = false;
-      if (markerType['inputValue'] == marker['data']['type']) {
+      if (markerType['inputValue'] == marker['data']['markerType']) {
         selectedType = true;
       }
       typesContainer.children.add(_typeContainerTemplate(
@@ -268,19 +316,35 @@ class MapEngine {
         var marker = map.getMarker(markerId);
         marker['data']['heading'] = headingText;
         marker['data']['body'] = bodyText;
-        marker['data']['type'] = type.value;
+        marker['data']['markerType'] = type.value;
         
         _lastMarkerId = -1;
         
         map.clearAllOverlays();
         
+        // If city is not empty, the lat lng has already
+        // been reverse geocoded. Skip geocoding and just save the
+        // marker.
+        if (!marker['data']['city'].isEmpty) {
+          saveMarkersOnServer(marker);
+          return;
+        }
+        
+        _addLocalityDataToMarker(marker)
+        .then((_) {
+          saveMarkersOnServer(marker);
+        });
+                
+        
+        
       } 
       // Button to remove the marker
       else if (event[0].target.id == 'remove-marker') {
-        print('removing');
         _lastMarkerId = -1;
         
-        map.removeMarker(markerId);
+        var marker = map.getMarker(markerId);
+        map.removeMarker(markerId); 
+        deleteMarkerFromServer(marker);
            
         map.clearAllOverlays();
       } 
@@ -304,6 +368,146 @@ class MapEngine {
         map.changeMarkerOptions(markerId, iconUrl: _markerIcons[typeInput.value]);
       }
     });
+  }
+    
+  void saveMarkersOnServer(Map marker) {
+    HttpRequest request = new HttpRequest();
+    
+    var url = "http://${window.location.host}/markers.json";
+    
+    request.open("POST", url);
+    
+    var csrf = querySelector('meta[name="csrf-token"]').attributes['content'];
+    request.setRequestHeader('X-CSRF-Token', csrf);
+    request.setRequestHeader("content-Type", "application/json");
+    
+    Map markerToSend = {
+      'lat' : marker['latLng'][0],
+      'lng' : marker['latLng'][1],
+      'heading' : marker['data']['heading'],
+      'body' : marker['data']['body'],
+      'markerType' : marker['data']['markerType'],
+      'street' : marker['data']['street'],
+      'zip' : marker['data']['zip'],
+      'city' : marker['data']['city'],
+      'country' : marker['data']['country']
+    };
+    
+    request.send(JSON.encode(markerToSend));
+  }
+  
+  void deleteMarkerFromServer(Map marker) {
+    HttpRequest request = new HttpRequest();
+    
+    var url = "http://${window.location.host}/markers/all.json";
+    
+    request.open("DELETE", url);
+    
+    var csrf = querySelector('meta[name="csrf-token"]').attributes['content'];
+    request.setRequestHeader('X-CSRF-Token', csrf);
+    request.setRequestHeader("content-Type", "application/json");
+    
+    Map markerToSend = {
+      'lat' : marker['latLng'][0],
+      'lng' : marker['latLng'][1],
+    };
+    
+    request.send(JSON.encode(markerToSend));
+  }
+  
+  void _initializePlacesAutocomplete() {
+    InputElement addressInput = querySelector('.search-input');
+    
+    // Remove any text if user clicks on address input box.
+    [addressInput.onClick, addressInput.onTouchStart].forEach((stream) {
+      stream.listen((onData) {
+        addressInput.value = '';
+      });
+    });
+
+    var autocomplete = new JsObject(js.gmaps['places']['Autocomplete'],
+        [addressInput]);
+
+    autocomplete.callMethod('bindTo', ['bounds', map.getJsMap()]);
+    
+    ButtonElement btn = querySelector('.search-btn');
+    
+    btn.onClick.listen((event) {
+      event.preventDefault();
+      
+      js.gmaps['event'].callMethod('trigger', [autocomplete, 'place_changed']);
+      return false;
+    });
+
+    // After user clicks on autocompleted item
+    js.gmaps['event'].callMethod('addListener', [autocomplete, 'place_changed', js.func((jsThis) {
+      var place = autocomplete.callMethod('getPlace', []);
+      print(place);
+      if (place['geometry'] == null) {
+        return;
+      }
+      
+      var viewport = place['geometry']['viewport'];
+      
+      if (viewport != null) {
+        map.getJsMap().callMethod('fitBounds', [viewport]);
+      } else {
+        map.redrawMap({
+          'center': place['geometry']['location'],
+          'zoom': 15
+        });
+      }
+    })]);
+  }
+  
+  void _initializeMultiSelectBoxes() {
+    js.$('#locality-select', 'select2');
+    js.$('#type-select', 'select2');
+  }
+  
+  /**
+   * Add address, city, zipcode and country data to the specified
+   * marker with the help of Google Geocoder service.
+   */
+  Future _addLocalityDataToMarker(Map marker) {
+    Completer c = new Completer();
+    
+    var markerData = marker['data'];
+    
+    map.reversedGeocodeLatLng(marker['latLng'])
+    .then((geocodingResults) {
+      for (int i = 0; i < geocodingResults['length']; i++) {
+        var geoResult = geocodingResults[i];
+        
+        switch (geoResult['types'][0]) {
+          case 'street_address':
+            String street = geoResult['formatted_address'];
+            var commaIndex = street.indexOf(',');
+            
+            if (commaIndex > 0) {
+              markerData['street'] = street.substring(0, commaIndex);
+            }
+            
+            break;
+            
+          case 'postal_code':
+            markerData['zip'] = geoResult['address_components'][0]['long_name'];
+            break;
+            
+          case 'locality':
+            markerData['city'] = geoResult['address_components'][0]['long_name'];
+            break;
+            
+          case 'country':
+            markerData['country'] = geoResult['address_components'][0]['long_name'];
+            break;
+        }
+      }
+      
+      c.complete();
+    });
+    
+    return c.future;
   }
 }
 

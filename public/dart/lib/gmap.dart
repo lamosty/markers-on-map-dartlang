@@ -344,6 +344,29 @@ class GMap {
     
     return [lat, lng];
   }
+  
+  /**
+   * This method returns reverse-geocoded results as
+   * the result of the Dart's [Future] for specified 
+   * latitude and longitude that can be used to find address of
+   * the specified lat and lng.
+   */
+  Future<JsObject> reversedGeocodeLatLng(List<double> latLng) {
+    Completer c = new Completer();
+    
+    var params = {
+      'getaddress' : {
+        'latLng' : latLng,
+        'callback' : js.func((jsThis, results, _) {
+          c.complete(results);
+        })
+      }
+    };
+    
+    js.gmap3(params);
+    
+    return c.future;
+  }
 
 
 //  String exportMarkersAsJSON() {
