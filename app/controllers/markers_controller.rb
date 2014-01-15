@@ -1,5 +1,10 @@
 class MarkersController < ApplicationController
   def index
+    cities = City.all()
+    countries = Country.all()
+
+    @locality = cities + countries
+    @types = Marker.uniq.pluck(:markerType)
   end
 
   def create
@@ -31,9 +36,6 @@ class MarkersController < ApplicationController
   end
 
   def show
-
-
-
     @markers = Marker.all()
 
     render json: {

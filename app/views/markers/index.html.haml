@@ -11,20 +11,14 @@
 
     .filter-container
       %h3 locality
-      %select#locality-select{multiple: "true"}
-        %option test
-        %option hest
-        %option hesnfdsaf
-        %option hesdafdast
-        %option hesdafdasfdasdfsa
+      = select('', '',
+        @locality.map {|item| [item.title]}, {},
+        { :multiple => true, :name => "locality", :id => "locality-select"})
 
       %h3 type
-      %select#type-select{multiple: "true"}
-        %option test
-        %option hest
-        %option hesnfdsaf
-        %option hesdafdast
-        %option hesdafdasfdasdfsa
+      = select('', '',
+        @types, {},
+        { :multiple => true, :name => "type", :id => "type-select"})
 
   .main-map.map-container.col-md-8
     #map
