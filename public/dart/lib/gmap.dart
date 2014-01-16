@@ -367,8 +367,20 @@ class GMap {
     
     return c.future;
   }
+  
+  void removeAllMarkersFromMap() {
+    var params = {
+      'clear' : {
+        'name' : "marker"
+      }
+    };
 
+    js.gmap3(params);
 
+    _markers.clear();
+    _lastMarkerId = -1;
+  }
+  
 //  String exportMarkersAsJSON() {
 //    List<Map> markersToExport = new List();
 //
@@ -391,17 +403,7 @@ class GMap {
 //
 //  }
 //
-//  void removeAllMarkersFromMap() {
-//    var params = {
-//      'clear' : {
-//        'name' : "marker"
-//      }
-//    };
-//
-//    js.gmap3(params);
-//
-//    _markers = {};
-//  }
+  
 
 }
 

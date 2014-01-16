@@ -33,8 +33,8 @@ class JsHelper {
    * Calls jQuery on specified selector with specified method that is 
    * fed by specified arguments.
    */
-  JsObject $(String selector, String methodName, [Map args = const {}]) {
-    return jQuery.apply([selector]).callMethod(methodName, [jsify(args)]);
+  JsObject $(String selector, String methodName, [List args = const []]) {
+    return jQuery.apply([selector]).callMethod(methodName, args);
   }
 
   JsFunction func(Function f) {

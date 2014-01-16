@@ -40,7 +40,7 @@ class MapEngine {
     );
     
     map.addMapEvent('click', createNewMarker);   
-    map.addMapOnces('idle', loadMarkersFromServer);
+    map.addMapOnces('idle', loadAllMarkersFromServer);
   }
   
   /**
@@ -91,10 +91,21 @@ class MapEngine {
   }
   
   /**
-   * Loads and draw on the Google Map markers from the server.
+   * Loads all markers from the server and returns future 
+   * containing newly added markers as a list of marker ids.
    */
-  Function loadMarkersFromServer(jsThis, sender, event, context) {    
-    var url = "http://${window.location.host}/markers/all.json";
+  Future<List<int>> _loadMarkersFromServer([Map filteringArgs]) {    
+    Completer c = new Completer();
+    
+    String args = "";
+    
+    if (filteringArgs != null) {
+      filteringArgs.forEach((key, value) {
+        args += "$key=$value&";
+      });
+    }
+    
+    var url = "http://${window.location.host}/markers/all.json?$args";
     
     HttpRequest.getString(url).then((markers) {
       Map markersInJson = JSON.decode(markers);
@@ -103,8 +114,6 @@ class MapEngine {
       if (markersInList.isEmpty) {
         return;
       }
-      
-      print(markersInList);
       
       List<int> newMarkersIds = [];
       
@@ -129,10 +138,24 @@ class MapEngine {
         );
       }
       
-      map.drawMarkersOnMap(newMarkersIds);
+      c.complete(newMarkersIds);
+      
+    });
+    
+    return c.future;
+  }
+  
+  /**
+   * Event that loads all the markers form server and displays them
+   * on the Google Map.
+   */
+  Function loadAllMarkersFromServer(jsThis, sender, event, context) {
+    _loadMarkersFromServer()
+    .then((List<int> markerIds) {
+      map.drawMarkersOnMap(markerIds);
     });
   }
-    
+      
   /**
    * Returns events for new marker that has been added to the map
    * by clicking on it.
@@ -442,7 +465,6 @@ class MapEngine {
     // After user clicks on autocompleted item
     js.gmaps['event'].callMethod('addListener', [autocomplete, 'place_changed', js.func((jsThis) {
       var place = autocomplete.callMethod('getPlace', []);
-      print(place);
       if (place['geometry'] == null) {
         return;
       }
@@ -463,6 +485,32 @@ class MapEngine {
   void _initializeMultiSelectBoxes() {
     js.$('#locality-select', 'select2');
     js.$('#type-select', 'select2');
+    
+    // Initialize events
+    var params = [
+      "change",
+      _multiSelectBoxOnChangeEventFunction()
+    ];
+    
+    js.$('#locality-select', 'on', params);
+    js.$('#type-select', 'on', params);
+    
+  }
+  
+  JsFunction _multiSelectBoxOnChangeEventFunction() {
+    return js.func((jsThis, result) {
+      Map filteringArgs = {
+        'locality' : js.$('#locality-select', 'select2', ['val']),
+        'type' : js.$('#type-select', 'select2', ['val'])
+      };
+      
+      map.removeAllMarkersFromMap();
+      
+      _loadMarkersFromServer(filteringArgs).then((List<int> markersInList) {
+        map.drawMarkersOnMap(markersInList);
+      });
+      
+    });
   }
   
   /**
