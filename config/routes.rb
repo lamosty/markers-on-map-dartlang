@@ -2,5 +2,5 @@ Mapengine::Application.routes.draw do
 
   resources :markers
 
-  root "markers#index"
+  root "presentation#index"
 end

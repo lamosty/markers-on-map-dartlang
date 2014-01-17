@@ -1,14 +1,17 @@
 %ul.nav.navbar-nav.navbar-right
   %li
-    %a{"data-target" => "intro", href: "/"} Intro
+    %a{"data-target" => "intro", href: "#{root_path}#intro"} Intro
   %li
-    %a{"data-target" => "features", href: "/"} Features
+    %a{"data-target" => "features", href: "#{root_path}#features"} Features
   %li
-    %a{"data-target" => "benefits", href: "/"} Benefits
+    %a{"data-target" => "benefits", href: "#{root_path}#benefits"} Benefits
   %li
-    %a{"data-target" => "customers", href: "/"} Satisfied Customers
+    %a{"data-target" => "customers", href: "#{root_path}#customers"} Satisfied Customers
   %li
-    %a{href: "mapengine_demo.html"} Try DEMO
+    %a{href: "https://docs.google.com/document/d/1G1qQ9N6QZCUwxUXoUQ1upMs9WCTObl8vC2zJOTaf74g/edit?usp=sharing",
+      target: "_blank"} Documentation
+  %li
+    %a{href: markers_path} MapEngine Live
 
 
 

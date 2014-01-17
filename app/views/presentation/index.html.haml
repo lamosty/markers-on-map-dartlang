@@ -1,0 +1,81 @@
+#intro.unit-intro
+  .wrapper
+    .floats.visible
+      .image.markers
+        %p MapEngine - web app for working with maps
+      .description
+        %p
+          MapEngine is a powerful web application enabling adding, filtering and removing data from the map in form of ‘markers’
+    .floats.hidden
+      .image.maps
+        %p Powered by Google Maps API
+      .description
+        %p
+          Powered by newest Google Maps API v3,
+          MapEngine is fast and reliably working
+          across many different devices
+    .floats.hidden
+      .image.dart
+        %p Built in Ruby on Rails + Google Dart language
+      .description
+        %p
+          Both Ruby on Rails and Google Dart are
+          bleeding edge technologies so it is a
+          pleasure using and extending MapEngine
+    .radio-switch
+      %input{checked: "checked", name: "unit-intro", type: "radio", value: "markers"}/
+      %input{name: "unit-intro", type: "radio", value: "maps"}/
+      %input{name: "unit-intro", type: "radio", value: "dart"}/
+%article#features.light
+  .container
+    .text.col-md-6
+      %header
+        %h2 Advanced Filtering Features
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    .image.col-md-6
+      %img{alt: "Advanced Filtering Features Image", src: image_path("advanced-filtering-features.jpg")}/
+%article.dark
+  .container
+    .image.col-md-6
+      %img{alt: "Beautiful and Simple Admin Image", src: image_path("beautiful-and-simple-admin.jpg")}/
+    .text.col-md-6
+      %header
+        %h2 Beautiful and Simple Admin
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+%article.light
+  .container
+    .text.col-md-6
+      %header
+        %h2 Clean and Thoroughly Documented Source Code
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+      %p Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+    .image.col-md-6
+      %img{alt: "Documented Source Code Image", src: image_path('documented-source-code.jpg')}/
+#benefits.benefits
+  %h2 Benefits in a nutshell
+  .units.container
+    .col-md-3.col-sm-6
+      .unit.filter
+        %p Find and filter data by markers on the map
+    .col-md-3.col-sm-6
+      .unit.devices
+        %p Working across all devices and handhelds
+    .col-md-3.col-sm-6
+      .unit.cluster
+        %p Cluster merges togother markers to increase loading and executing speed
+    .col-md-3.col-sm-6
+      .unit.admin
+        %p Comes with gread administration panel and API for developers
+#customers.testimonials
+  .container
+    .testimonial
+      %p.text
+        MapEngine has helped me to create a beautifully-looking, feature-rich web application in
+        which users can add, filter, find and remove their data on the map. It really has been a
+        pleasure extnding and templatng MapEngine. Thank you!
+      %p.author Pat Fllyn, CEO of smartincome.com
+
+- content_for :scripts do
+  = javascript_include_tag "presentation"

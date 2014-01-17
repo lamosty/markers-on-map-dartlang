@@ -34,6 +34,10 @@ body, html {
     margin-top: 24px;
   }
 }
+
+.navbar-collapse.in {
+  overflow-y: visible;
+}
 // Navbar
 .main-nav {
   .navbar {
@@ -335,7 +339,6 @@ footer {
 
 }
 
-// DEMO part
 .map-page {
   padding-top: 30px;
   background-color: $white-menu-hover;
@@ -418,6 +421,7 @@ footer {
 
   .filter-container {
     margin-top: 50px;
+    margin-bottom: 20px;
 
     h3 {
       text-align: left;

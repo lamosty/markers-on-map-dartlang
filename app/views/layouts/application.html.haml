@@ -30,18 +30,7 @@
                 .icon
                   .icon-text mail
             #bottom-nav-collapse.menu-container.collapse.navbar-collapse
-              %ul.nav.navbar-nav.navbar-right
-                %li
-                  %a{"data-target" => "intro", href: "/"} Intro
-                %li
-                  %a{"data-target" => "features", href: "/"} Features
-                %li
-                  %a{"data-target" => "benefits", href: "/"} Benefits
-                %li
-                  %a{"data-target" => "customers", href: "/"} Satisfied Customers
-                %li
-                  %a{href: "mapengine_demo.html"} Try DEMO
-
+              = render :partial => "layouts/navbar_items"
 
     = yield :js_data
     = yield :scripts
