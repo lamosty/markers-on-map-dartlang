@@ -334,7 +334,10 @@ class GMap {
   
   List<double> extractLatLngFromGoogleMarker(dynamic marker) {
     var latLng = marker['latLng'];
-    return _shortenLatLngNumberDigits([latLng['b'], latLng['d']]);
+    return _shortenLatLngNumberDigits(
+      [latLng.callMethod('lat', []),
+      latLng.callMethod('lng', [])]
+    );
   }
   
   List<double> _shortenLatLngNumberDigits(List<double> latLng, [int numOfDigits = 6]) {
@@ -378,7 +381,6 @@ class GMap {
     js.gmap3(params);
 
     _markers.clear();
-    _lastMarkerId = -1;
   }
   
 //  String exportMarkersAsJSON() {

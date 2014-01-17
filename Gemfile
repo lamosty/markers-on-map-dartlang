@@ -36,6 +36,7 @@ gem 'execjs'
 gem "select2-rails"
 
 gem 'protected_attributes'
+gem 'arel'
 
 
 # Use ActiveModel has_secure_password

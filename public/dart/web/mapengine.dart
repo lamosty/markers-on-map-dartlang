@@ -59,7 +59,7 @@ class MapEngine {
     if (_lastMarkerId != -1) {
       map.removeMarker(_lastMarkerId);
     }
-    
+       
     // Clear overlays that might be opened.
     map.clearAllOverlays();
 

@@ -145,6 +145,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  arel
   capistrano
   coffee-rails (~> 4.0.0)
   compass-rails (~> 1.1.2)

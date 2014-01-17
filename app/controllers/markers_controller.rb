@@ -1,3 +1,5 @@
+require 'json'
+
 class MarkersController < ApplicationController
   def index
     cities = City.all()
@@ -36,7 +38,30 @@ class MarkersController < ApplicationController
   end
 
   def show
-    @markers = Marker.all()
+    locality = params[:locality]
+    type = params[:type]
+
+
+    @markers = Marker.all
+
+    if !locality.nil?
+      # @markers = @markers.where('city=? OR country=?', 'Bratislava', 'Slovakia')
+      locality = locality[1..-2].split(', ')
+      if !locality.empty?
+        @markers = @markers.where('"city_id" IN (?) OR "country_id" IN (?)',
+          City.where("title IN (?)", locality),
+          Country.where("title IN (?)", locality)
+        )
+      end
+    end
+
+    if !type.nil?
+      type = type[1..-2].split(', ')
+      if !type.empty?
+        @markers = @markers.where('"markerType" IN (?)', type)
+      end
+      # @markers = @markers.where('markerType=?', type)
+    end
 
     render json: {
       markers: @markers.to_json(include: {
@@ -50,6 +75,16 @@ class MarkersController < ApplicationController
     marker = Marker.where(:lat => params[:lat], :lng => params[:lng]).first
     if marker
       marker.destroy
+
+      otherMarkersCityCount = Marker.where(:city_id => marker.city).count
+      if otherMarkersCityCount == 0
+        marker.city.destroy
+      end
+
+      otherMarkersCountryCount = Marker.where(:country_id => marker.country).count
+      if otherMarkersCountryCount == 0
+        marker.country.destroy
+      end
     end
 
     render :nothing => true
