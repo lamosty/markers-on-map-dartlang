@@ -49,8 +49,8 @@ class MarkersController < ApplicationController
       locality = locality[1..-2].split(', ')
       if !locality.empty?
         @markers = @markers.where('"city_id" IN (?) OR "country_id" IN (?)',
-          City.where("title IN (?)", locality),
-          Country.where("title IN (?)", locality)
+          City.where("title IN (?)", locality).pluck(:id),
+          Country.where("title IN (?)", locality).pluck(:id)
         )
       end
     end

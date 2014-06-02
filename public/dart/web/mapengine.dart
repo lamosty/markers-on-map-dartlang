@@ -415,7 +415,7 @@ class MapEngine {
       'city' : marker['data']['city'],
       'country' : marker['data']['country']
     };
-    
+
     request.send(JSON.encode(markerToSend));
   }
   
