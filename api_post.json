@@ -1,3 +1,6 @@
-'{"markers": [
-{"lat":47,"lng":16,"heading":"JSON Marker","body":"Marker added by API","markerType":"work","street":"Most pri Bratislave 941","zip":"900 28","city":"Zálesie","country":"Slovakia"}
-]}'
+{"markers": 
+ [
+     {"lat":47,"lng":16,"heading":"JSON Marker","body":"Marker added by API","markerType":"work","street":"Most pri Bratislave 941","zip":"900 28","city":"Zálesie","country":"Slovakia"}
+ ]
+}
+]}

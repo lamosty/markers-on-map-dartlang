@@ -45,15 +45,18 @@ class ApiController < ApplicationController
   def new_markers
     logger.debug params
 
+    new_markers_array = []
+
     if params[:markers].kind_of?(Array)
-      params[:marker].each do |marker|
-        handle_marker(marker)
+      params[:markers].each do |marker|
+        new_markers_array << handle_marker(marker)
       end
     end
 
-
-
-    render :nothing => true
+    render json: {
+        :status => "OK",
+        :new_markers_id => new_markers_array
+    }
   end
 
   def handle_marker(marker)
@@ -80,5 +83,7 @@ class ApiController < ApplicationController
       @marker = Marker.new(marker)
       @marker.save
     end
+
+    return @marker.id
   end
 end
