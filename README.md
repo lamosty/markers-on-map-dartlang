@@ -15,3 +15,6 @@ By using Google Maps for displaying specified items, Rasto both did not have to 
 **Result and Operation of MapEngine**
 
 It will be possible to establish a web portal with for example beauty salons, miscellaneous shops, selling and buying real estate and others with custom layouts and design in a really short period of time thanks to the MapEngine. The newly-created website will take advantage of various pre-made components and functionality without the need of programming all of these parts. After that, it will be deployed on our client's server and ready to go.
+
+**Note**
+All the Dart code is located inside ./public/dart folder. It includes my custom Dart library for working with Google Maps API v3 and a simple application on top of that.
